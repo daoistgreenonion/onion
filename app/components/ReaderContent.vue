@@ -93,7 +93,8 @@ import { useExplicitPreference } from '~/composables/useExplicitPreference'
 import MarkdownIt from 'markdown-it'
 import Collapsible from '~/components/Collapsible.vue'
 
-const md = new MarkdownIt({ html: true, breaks: true, typographer: true })
+import { createMarkdownItInstance } from '~/utils/markdownRenderer'
+const md = createMarkdownItInstance()
 
 
 const explicitPreference = useExplicitPreference().explicitPreference
@@ -137,7 +138,9 @@ const currentNumber = computed(() => currentIndex.value + 1)
 
 
 function openLoreOverlay(url) {
-  loreUrl.value = url
+  // url is like `/embed-lore/novels/invictus/side-characters`
+  const fullUrl = `${url}?chapter=${props.currentSlug}`
+  loreUrl.value = fullUrl
   loreOpen.value = true
 }
 function closeLoreOverlay() {

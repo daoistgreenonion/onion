@@ -1,5 +1,5 @@
 <template>
-  <main class="max-w-4xl mx-auto py-12 px-4">
+  <main class="max-w-5xl mx-auto py-12 px-4">
     <h1 class="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
       Terms of Service
     </h1>
@@ -24,7 +24,7 @@
 
       <h2>3. Intellectual Property & Content Ownership</h2>
       <p>
-        Unless otherwise noted, all content published on this Site, including but not limited to novels, short stories, anthologies, lore articles, original images, and other creative works (“Content”), is the sole intellectual property of the author(s) (“the Author”). The Author retains all rights, title, and interest in and to the Content. Third‑party materials (including third‑party images) are excluded from “Content.”
+        Unless otherwise noted, all content published on this Site, including but not limited to novels, short stories, anthologies, lore articles, original images, and other creative works (“Content”), is the sole intellectual property of the website owner ("the Author"). The Author retains all rights, title, and interest in and to the Content. Third‑party materials (including third‑party images) are excluded from “Content.”
       </p>
       <p>
         Some images displayed on the Site (for example, in‑chapter illustrations) may be obtained from third‑party sources and used solely to illustrate and enhance the Site’s original content. These images are used for non‑commercial purposes, and any third‑party images remain subject to the applicable licences and terms of the respective rights holders/platforms for the individual image. Where practicable, credit/attribution is provided via a link to the original source. The Author does not claim ownership of any third‑party images, and they are used in good faith. If you believe any image is used in a way that constitutes infringement or otherwise violates your rights, please contact the Author via the Discord Server so the matter can be promptly reviewed and resolved.
@@ -65,17 +65,17 @@
 
       <h2>6. Donations & Support</h2>
       <p>
-        The Site may offer voluntary support options (e.g., Ko‑fi). Any contributions are donations and do not grant the donor any rights over the Content, the Site, or the Author. Donations are non‑refundable unless otherwise required by law.
+        The Site may offer voluntary support options (e.g., Ko‑fi). Any contributions are donations and do not grant the donor any rights over the Content, the Site, or the Author. Donations are entirely voluntary and thus are by default non‑refundable, unless otherwise required by law.
       </p>
 
       <h2>7. Third‑Party Links</h2>
       <p>
-        The Site may contain links to third‑party websites (e.g., Discord, Ko‑fi). The Author is not responsible for the content, accuracy, or practices of these external sites. Your use of third‑party services is at your own risk and subject to their respective terms.
+        The Site may contain links to third‑party websites (e.g., Discord, Webnovel, Ko‑fi). The Author is not responsible for the content, accuracy, or practices of these external sites. Your use of third‑party services is at your own risk and subject to their respective terms.
       </p>
 
       <h2>8. Disclaimer of Warranties</h2>
       <p>
-        The Site and its Content are provided “as is” without any warranties, express or implied. The Author does not guarantee that the Site will be uninterrupted, error‑free, or free of harmful components. You use the Site at your own risk.
+        The Site and its Content are provided “as is” without any warranties, express or implied. The Author does not guarantee that the Site will be uninterrupted, error‑free, or free of harmful components in case of third party interference (hacking). In its current configuration, the site never collects, or will ask you to input personal data, or submit any information about yourself. If such event occurs it means the site was compromised by third-parties. Never provide any personal data or information about yourself on this website. Use your own discretion. You use the Site at your own risk.
       </p>
 
       <h2>9. Limitation of Liability</h2>

@@ -7,9 +7,23 @@
       </NuxtLink>
 
       <!-- Links -->
-      <nav class="flex flex-wrap justify-center sm:justify-end gap-x-6 gap-y-2">
+      <nav class="flex flex-row sm:flex-col justify-center sm:justify-end gap-x-6 gap-y-2">
+        <h3 class="hidden sm:block mb-2 text-sm text-gray-600 dark:text-gray-400">Site:</h3>
         <NuxtLink
           v-for="item in footerLinks"
+          :key="item.label"
+          :to="item.href"
+          class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+          {{ item.label }}
+        </NuxtLink>
+      </nav>
+    
+      <!-- NavLinks -->
+      <nav class="flex flex-row sm:flex-col justify-center sm:justify-end gap-x-6 gap-y-2">
+        <h3 class="hidden sm:block mb-2 text-sm text-gray-600 dark:text-gray-400">Content:</h3>
+        <NuxtLink
+          v-for="item in contentLinks"
           :key="item.label"
           :to="item.href"
           class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
@@ -17,18 +31,58 @@
           {{ item.label }}
         </NuxtLink>
       </nav>
-
-      <!-- Discord -->
-        <a
-          href="https://discord.gg/your-invite-code"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="p-2 rounded-md  transition-colors text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 visible"
-          aria-label="Join Discord Server"
+      <!-- Community Links -->
+      <div class="flex flex-col items-center sm:items-start">
+        <nav class="flex flex-row sm:flex-col justify-center sm:justify-end gap-x-6 gap-y-2">
+          <h3 class="hidden sm:block text-sm text-gray-600 dark:text-gray-400 mb-2">Community:</h3>
+          <NuxtLink
+            v-for="item in communityLinks"
+            :key="item.label"
+            :to="item.href"
+            class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
-          <img src="/images/Discord-Symbol-Black.svg" alt="Discord" class="h-5 w-5 dark:hidden"/>
-          <img src="/images/Discord-Symbol-White.svg" alt="Discord" class="h-5 w-5 hidden dark:block"/>
-        </a>
+            {{ item.label }}
+          </NuxtLink>
+        </nav>
+      </div>
+      <div class="flex flex-col items-center sm:items-start">
+        <h3 class="hidden sm:block mb-3 text-sm text-gray-600 dark:text-gray-400">My Socials:</h3>
+        <div class="flex items-center mb-4">
+          <!-- Webnovel -->
+          <a
+            href="https://www.webnovel.com/profile/4324841567" target="_blank" rel="noopener noreferrer" class="mr-2 my-2" aria-label="My Webnovel Profile">
+            <img src="/images/WN-APPICON.svg" alt="Webnovel" class="h-5 w-5"/>
+          </a>
+          <!-- Ko-fi -->
+          <a
+            href="https://ko-fi.com/daoistgreenonion" target="_blank" rel="noopener noreferrer" class="m-2" aria-label="Support me on Ko-fi">
+            <img src="/images/kofi_symbol.svg" alt="Ko-fi" class="h-5 w-5"/>
+          </a>
+          <!-- Discord -->
+          <a
+            href="https://discord.gg/JfSRtJVXTd" target="_blank" rel="noopener noreferrer" class="m-2" aria-label="Join Discord Server">
+            <img src="/images/Discord-Symbol-Blurple.svg" alt="Discord" class="h-5 w-5"/>
+          </a>
+          <!-- Substack -->
+          <a
+            href="https://daoistgreenonion.substack.com/" target="_blank" rel="noopener noreferrer" class="m-1" aria-label="My Subtstack Page">
+            <img src="/images/substack.png" alt="Substack" class="h-6 w-6"/>
+          </a>
+        </div>
+
+        <!-- Legal Links -->
+        <nav class="flex flex-row sm:flex-col justify-center sm:justify-end gap-x-6 gap-y-2">
+          <h3 class="hidden sm:block mb-2 text-sm text-gray-600 dark:text-gray-400">Legal:</h3>
+          <NuxtLink
+            v-for="item in legalLinks"
+            :key="item.label"
+            :to="item.href"
+            class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            {{ item.label }}
+          </NuxtLink>
+        </nav>
+      </div>
     </div>
 
     <!-- Copyright -->
@@ -43,12 +97,23 @@
 <script setup>
 const footerLinks = [
   { label: 'Home', href: '/' },
-  { label: 'Novels', href: '/novels' },
-  { label: 'Anthologies', href: '/anthologies' },
-  { label: 'Short Stories', href: '/short-stories' },
   { label: 'News', href: '/news' },
-  { label: 'Support', href: '/support' },
-  { label: 'Terms', href: '/terms' },
-  { label: 'Privacy', href: '/privacy' },
+  { label: 'About', href: '/about' },
+]
+
+const contentLinks = [
+  { label: 'Novels', href: '/novels' },
+  // { label: 'Anthologies', href: '/anthologies' },
+  { label: 'Short Stories', href: '/short-stories' },
+]
+
+const communityLinks = [
+  { label: 'Support me', href: '/support' },
+  { label: 'Links & Resources', href: '/resources' },
+]
+
+const legalLinks = [
+  { label: 'Terms of Service', href: '/terms' },
+  { label: 'Privacy Policy', href: '/privacy' },
 ]
 </script>

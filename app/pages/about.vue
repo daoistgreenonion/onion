@@ -10,13 +10,13 @@
           Welcome to my website! I'm DaoistGreenOnion. This is where I share my stories, novels, and worlds with you. 
         </p>
         <p>
-          When making the site, I tried to include features that I believe to be helpful for good reading experience, I will include an explanation for them on this page first:
+          When making the site, I tried to include a few simple features that I believe to be helpful for good reading experience, I will include an explanation for them on this page first:
         </p>
       </div>
-      <Collapsible title="...Explicit Content" :open="true">
+      <Collapsible title="...Explicit Content Access and Visibility" :open="true">
         <div class="flex flex-col gap-4">
           <p>
-            To ensure best experience for everyone, explicit content (not appropriate for minors to view, and not appropriate for work) can be hidden site-wide with a simple button in the navigation bar at the top of the page. Click on the icon to change the content filtering mode. By choosing to display the explicit content you confirm that you are of legal age.
+            To ensure best experience for everyone, explicit content (not appropriate for minors to view, and not appropriate for work) can be hidden site-wide (this includes listing of works that contain explicit content) with a simple button in the navigation bar at the top of the page. Click on the icon to change the content filtering mode. By choosing to display the explicit content you confirm that you are of legal age.
           </p>
           <p>
             The button has two states:
@@ -27,15 +27,19 @@
               <span class="border rounded border-2 border-dark dark:border-gray-100 px-1 text-[10px] sm:text-sm">SFW</span>
             </p>
             <p> Safe For Work</p>
-            <p>When this is displayed, explicit content is hidden sitewide.</p>
+            <p>When this is displayed, explicit content is hidden sitewide. (Novels and Short Stories containing explicit content are also hidden from listing on Home Page and their corresponding listing pages)</p>
             <p>
               <span class="border rounded border-2 border-dark dark:border-gray-100 px-1 text-[10px] sm:text-sm">NSFW</span>
             </p>
             <p>Not Safe For Work</p>
-            <p>When this is displayed, explicit content is shown sitewide.</p>
+            <p>When this is displayed, all explicit content is shown sitewide.</p>
           </div>
+
+          <p>
+            If you are already on the novel page that contains explicit content, this feature will not automatically reroute you to another page, it only works as a means of restricting access to getting to the page containing explicit content to begin with.
+          </p>
     
-          <p>Sometimes, even when you are an adult, and not at work, you may not feel like reading a NSFW scene at the moment, (the plot is just too good and you can't wait to read it lol), anyway, jokes aside, all in-chapter/in-story explicit content on the reading pages is nested inside collapsible sections just like the ones on this About Page. They are all collapsed by default when the site-wide NSFW content is disabled, and expanded by default if the NSFW content is enabled. You can expand and collapse them individually by clicking on the "Expand"/"Collapse" WITHOUT affecting the global NSFW setting if you feel like skipping a particular scene.</p>
+          <p>Sometimes, even when you are an adult, and not at work, you may not feel like reading a NSFW scene at the moment, (the plot is just too good and you can't wait to read ahead lol), anyway, jokes aside, all in-chapter/in-story explicit content on the reading pages is nested inside collapsible sections just like the ones on this About Page. Those containing Explicit Content are clearly labeled as such (i.e. Explicit Content) They are all collapsed by default when the site-wide NSFW content is disabled, and expanded by default if the NSFW content is enabled. You can expand and collapse them individually by clicking on the "Expand"/"Collapse" WITHOUT affecting the global NSFW setting if you feel like skipping a particular scene.</p>
     
           <div class="grid grid-cols-[1fr,2fr,3fr] gap-y-2">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,6 +53,8 @@
             <p>Expanded</p>
             <p>The in-chapter explicit content is expanded, you can collapse it in case you want to skip it (this will only affect this specific section).</p>
           </div>
+
+          <p>To be clear, these eye icons are used on all collapsible sections site-wide, those containing Explicit Content are clearly labeled so by the words next to the icon. Collapsible sections NOT containing explicit content (like this one, and on this About page) are also NOT affected by the NSFW/SFW setting, only those for Explicit Content are.</p>
         </div>
       </Collapsible>
       
@@ -56,7 +62,7 @@
       <Collapsible title="...Reading Page Functionality" :open="true">
         <div class="flex flex-col gap-4">
           <p>
-            On every novel and short story reading page you’ll find a handy reading panel that gives you quick access to everything you need to enhance reading experience without leaving the story. Everything stays out of the way while you read, but it’s always just a tap or click away when you need it.
+            On every novel and short story reading page (actual story text page) you’ll find a handy reading panel that gives you quick access to everything you need to enhance reading experience without leaving the story. Everything stays out of the way while you read, but it’s always just a tap or click away when you need it.
           </p>
           
           <p>
@@ -75,7 +81,7 @@
           </p>
           
           <p>
-            Explicit Content – some works contain mature scenes. As mentioned in the previous section (...Explicit Content), they are nested in collapsible sections. You can expand individual scenes or use the global eye icon to reveal or hide all explicit content across the entire site.
+            Explicit Content – some works contain mature scenes. As mentioned in the previous section (...Explicit Content), they are nested in collapsible sections. You can expand and/or collapse individual explicit scenes by clicking on the eye icon or use the global NSFW/SFW icon to reveal or hide all explicit content across the entire site including the explicit scenes.
           </p>
         </div>
 
@@ -85,11 +91,10 @@
         <div class="flex flex-col gap-4">
           <p>
             Some novels and anthologies include optional lore entries — extra notes about the world, characters, or magic systems. Because lore is always tied to a specific story, there's no separate lore link in navigation. Instead, you'll find the link to the lore of the specific novel in that novel's description.
-  
           </p>
           
           <p>
-            And as I already said above in "...Reading Page Functionality", it's also available directly on reading pages of that novel.
+            And as I already explained above in "...Reading Page Functionality", it's also available directly on reading pages of that novel.
           </p>
           
           <p>
@@ -100,23 +105,29 @@
 
       <div class="flex flex-col gap-4 p-6 sm:p-12">
         <p>
-          We're done with the functions for now, perhaps later there will be more there. 
+          We're done with going over the functions for now, perhaps later there will be more there. 
         </p>
         <p>
-          lol, after those collapsible sections above this text might feel like the unskippable dialogue in a game hahaha. Anyway, there's still a few things I wanted to go over on this page.
+          lol, after those collapsible sections above, this text might feel like the unskippable dialogue or cut scene in a game hahaha. Anyway, there's still a few things I wanted to go over on this page.
         </p>
-  
-        <p>
-          I made this website purely for your entertainment, there's really not much more to it. I first had the idea when I asked my readers on the Discord Server if I should move away from Discord because of their changes in terms and services. I grew increasigly frustrated as after looking for possible alternatives, that all possible platforms I could move the server to had similar terms of service in regards to privacy and data collection. I am of the generation of older internet where data collection wasn't normal, you see ^^. 
-        </p>
-  
-        <p>
-          So I had the idea that perhaps it was easier to just build my own space like that. The specific point of concern for Discord was later proven not to be that big of a deal, so I decided that there was currently no need for such functionality, but the idea remained in my head. 
-        </p>
-        <p>
-          I also remembered the feeling of uncertainty of having no fallback platform through which I could freely deliver content, news and announcements, and interact with my readers, in case I really had to or wanted to leave Discord. And so, this website was born. It's just a static website for now. But perhaps with time it could grow into something more if need arises
-        </p>
-        
+      </div>
+      
+      <Collapsible title="...Why I built this Website" :open="true">
+        <div class="flex flex-col gap-4">
+          <p>
+            I made this website purely for your entertainment, there's really not much more to it. I first had the idea when I asked my readers on the Discord Server if I should move away from Discord because of their changes in terms and services in regards to their data collection, content policy, as well as identity verification. I grew increasigly frustrated as after looking for possible alternatives, that all possible platforms I could move the server to had similar terms of service in regards to privacy and data collection. I am of the generation of older internet where data collection wasn't normal, and privacy was more of a guarantee than a suggestion ^^. 
+          </p>
+    
+          <p>
+            So I had the idea that, since I am originally a software developer, perhaps it was easier to just build my own replacement for the server. The specific point of concern for Discord (at least the sharpest one) was later proven not to be that big of a deal, so I decided that there was currently no need for such functionality, but the idea remained in my head. Not to mention, that after their policy change I did not feel like posting any of my content on the server since that would implicitly transfer some of the intellectual property rights for it which I did not want to do.
+          </p>
+          <p>
+            I also remembered the feeling of uncertainty of having no fallback platform through which I could freely deliver content, news and announcements, and interact with my readers, in case I really had to or wanted to leave Discord. And so, the initial idea for this website was born. Eventually the idea became a fixation I couldn't get rid of so I made this first very light and simplistic version of what I initially envisioned. It's just a static website for now to share my works and updaates (you can call them news or announcements I guess, I chose "News" for the website since its the shortes word lol) with my readers. But perhaps with time it could grow into something more if need arises.
+          </p>
+        </div>
+      </Collapsible>
+      
+      <div class="flex flex-col gap-4 p-6 sm:p-12">
         <p>
           With that in mind, I guess I should touch on the Terms and Services as well as Privacy Policy, just briefly and in general terms, there are dedicated pages for them (links in the footer at the very bottom of every page):
         </p>
@@ -126,19 +137,20 @@
       <Collapsible title="...Privacy and Terms" :open="true">
         <div class="flex flex-col gap-4">
           <p>
-            I built this site to share stories, not to collect data. There are no ads, no analytics, and no tracking of any kind. The only thing your browser remembers is your preferences (light or dark theme, explicit content, etc.) so the site looks the way you like it every time you open it. It is not a cookie, but what is called SiteData, used by all sites. That's stored entirely on your device and never sent anywhere, you can erase this data anytime by clearing site.data for this site. If your browser is set to delete site data after you close the tab, this data will be erased automatically and your preferences would not be remembered. If you'd like the full, more formal version, you can read <NuxtLink :to="`/privacy`" class="text-brand dark:text-brand-light hover:text-brand-light dark:hover:text-brand-lightest hover:underline" >Privacy Policy</NuxtLink>.
+            I built this site to share stories, not to collect data. There are no ads, no analytics, and no tracking of any kind built into it. I wanted to create this website out of frustration with the stats and data-collection obsessed internet to begin with, so naturally I didn't add any function that would contradict my vision for the site. The only thing your browser remembers is your preferences (light or dark theme, explicit content, etc.) so the site looks the way you like it every time you open it (across different visits). It is not a cookie, but what is called localStorage (included in site data), used by all sites and browsers automatically. That's stored entirely on your device and never sent anywhere, nor does it track your actions like a cookie. You can erase this data anytime by clearing site.data for this site. If your browser is set to automatically delete site data after you close the tab/window, this data will be erased automatically and your preferences would not be remembered, so you'll have to configure them every time you visit the site (not that big of a deal really either, but you also could set up an exception for this site if you don't feel like setting preferences on every visit). However, as much as I'd like to be idealistic, I still have to use modern internet infrastructure to host and deliver this website to you, which means that I use third-party services in between the site which is free of tracking and you, and I can't do much about what happens in that space in between the site and your device. That is just an unavoidable part of operating a website in this day and age that I can't do anything about. If you'd like the full, more formal version, you can read <NuxtLink :to="`/privacy`" class="text-brand dark:text-brand-light hover:text-brand-light dark:hover:text-brand-lightest hover:underline" >Privacy Policy</NuxtLink>.
           </p>
           <p>
-            All the stories, art, and lore on this site are my original work, and I retain full rights to them. You're welcome to read, download copies for your personal enjoyment (when I set up that funcionality in the future, downloads are not available yet), and share links to the site. What I ask is that you don't republish, redistribute, or use my work for commercial purposes or AI training without my permission. There's also a note about mature content — some stories are intended for adult readers, and you'll see a clear warning before those sections. The full legal text lives on the <NuxtLink :to="`/terms`" class="text-brand dark:text-brand-light hover:text-brand-light dark:hover:text-brand-lightest hover:underline" >Terms of Service</NuxtLink> page, but the short version is: just enjoy the stories, that's all I ask and all I intended by creating this website for you all.
+            All the stories, art, and lore on this site are my original work, and I retain full rights to them. You're welcome to read, download copies for your personal enjoyment (when I set up that funcionality in the future, downloads are not available yet), and share links to the site, that's what I made this site for to begin with after all. What I ask is that you don't republish, redistribute, or use my work for commercial purposes or AI training without my permission. There's also a note about mature content — some stories are intended for adult readers, and you'll see a clear warning labes on the work containing them, as well as before those sections within the content itself. The website is set to start out in SFW mode by default, so you take full responsibility for viewing the content when you switch the viewing mode to show explicit content. The full legal text lives on the <NuxtLink :to="`/terms`" class="text-brand dark:text-brand-light hover:text-brand-light dark:hover:text-brand-lightest hover:underline" >Terms of Service</NuxtLink> page, but the short version is: just enjoy the stories, that's all I ask and all I intended by creating this website for you all.
           </p>
         </div>
 
       </Collapsible>
 
+      <div class="flex flex-col gap-4 p-6 sm:p-12">
+        <p></p>
+      </div>
 
-      <Collapsible title="...Me" :open="true">
-        <p>When I'm not writing, I'm probably sipping tea and reading old books.</p>
-      </Collapsible>
+
 
 
     </div>

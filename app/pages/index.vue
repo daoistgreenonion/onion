@@ -81,14 +81,22 @@
     
     <!-- About Section -->
     <section className='flex flex-col-reverse sm:flex-row justify-between topo px-5 py-10 gap-5'>
-      <article className='bg-gray-50 dark:bg-dark2 p-3 py-6 rounded w-full sm:w-1/2'>
+      <article className='bg-gray-50 dark:bg-dark2 px-10 py-14 rounded w-full sm:w-1/2'>
         <div className="flex justify-between items-baseline mb-4">
           <NuxtLink to="/news" className="rounded px-1.5 text-darkaccent dark:text-accent hover:text-accent hover:underline">
             <h2 className="text-xl  font-bold">About</h2>
           </NuxtLink>
         </div>
-        <div className="space-y-4">
-          <p></p>
+        <div className="flex flex-col gap-4 justify-between space-y-4">
+          <p>
+          Welcome to my website! I'm DaoistGreenOnion. This is where I share my stories, novels, and worlds with you. 
+        </p>
+        <p>
+          I built this site to share stories, not to collect data. There are no ads, no analytics, and no tracking of any kind. The only thing your browser remembers is your preferences (light or dark theme, explicit content, etc.) so the site looks the way you like it every time you open it.
+        </p>
+        <p>
+          When making the site, I tried to include a few simple features that I believe to be helpful for good reading experience, I will include detailed explanation for them, as well as some other relevant or perhaps interesting information about the site on the <NuxtLink :to="`/about`" class="text-brand dark:text-brand-light hover:text-brand-light dark:hover:text-brand-lightest hover:underline" >About Page</NuxtLink>. You can treat the page as an instruction manual for the site.
+        </p>
         </div>
       </article>
       <article className='bg-gray-50 dark:bg-dark2 p-3 py-6 rounded w-full sm:w-1/2'>
@@ -145,6 +153,6 @@ const homepageSections = computed(() => ({
   shorts: (shortsRaw.value ?? [])
     .filter(s => explicitPreference.value === 'expanded' || !s.explicit)
     .sort((a, b) => (b.date ? new Date(b.date).getTime() : 0) - (a.date ? new Date(a.date).getTime() : 0)).slice(0, 3),
-  news: (newsRaw.value ?? []).slice(0, 3),
+  news: (newsRaw.value ?? []).slice(0, 5),
 }))
 </script>

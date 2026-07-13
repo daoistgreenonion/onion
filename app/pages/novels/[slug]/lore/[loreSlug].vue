@@ -3,6 +3,7 @@
     v-if="novel && novel.lore?.length"
     :work-title="novel.title"
     :lore="novel.lore"
+    :chapters="novel.chapters" 
     :back-link="`/novels/${slug}`"
     :work-slug="slug"
     work-type="novels"

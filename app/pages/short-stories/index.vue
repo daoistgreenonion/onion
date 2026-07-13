@@ -1,5 +1,5 @@
 <template>
-  <main class="max-w-4xl mx-auto py-12 px-4">
+  <main class="max-w-5xl mx-auto py-12 px-4">
     <div class="flex justify-between sm:mb-8">
       <h1 class="text-4xl font-bold">Short Stories</h1>
   
@@ -76,6 +76,13 @@
         </select>
       </div>
     </div>
+
+    <div class="mb-8">
+        <p class="block explicit:hidden" >
+          Explicit content is currently hidden, so some works may be missing from display. If you are an adult, and wish to view it, toggle the eye icon in navigation bar at the top of the screen to show explicit content.
+          <NuxtLink to="/about" class="text-gray-600 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-200 hover:underline font-bold">Click here to learn more</NuxtLink>
+        </p>
+      </div>
 
     <!-- Story list -->
     <div class="space-y-6">

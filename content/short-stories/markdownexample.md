@@ -71,6 +71,8 @@ After cautiously observing his surroundings, he decided to carefully press on de
 
 Dolore dolore consequat ipsum eiusmod laboris veniam proident anim sunt nisi. Amet voluptate sit nostrud labore laborum elit amet incididunt consectetur cillum eiusmod. Duis proident exercitation enim et do proident tempor amet amet occaecat.
 
+[[skip:Explicit Scene]]
+
 [[explicit: Title]]
  
 She’s facing away

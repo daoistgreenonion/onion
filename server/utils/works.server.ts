@@ -5,6 +5,7 @@ import matter from 'gray-matter'
 export interface ChapterMeta {
   slug: string
   title: string
+  loreChapter?: string   // the slug of the chapter that unlocks this lore
 }
 
 export type WorkType = 'long-novel' | 'short-novel' | 'anthology' | 'short-story'
@@ -23,6 +24,7 @@ export interface NovelMeta {
   lore?: ChapterMeta[]
   date?: string
   explicit?: boolean
+  // loreChapter?: string   // the slug of the chapter that unlocks this lore
 }
 
 export interface AnthologyStory {
@@ -87,6 +89,7 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
         return {
           slug: f.replace(/\.md$/, ''),
           title: lData.title || f.replace(/\.md$/, ''),
+          loreChapter: lData.chapter || undefined,   // ← new field
         }
       })
   }
@@ -302,4 +305,12 @@ export function getLoreContent(workDir: string, loreSlug: string) {
   const fileContent = fs.readFileSync(lorePath, 'utf8')
   const { data, content } = matter(fileContent)
   return { title: data.title || loreSlug, content }
+}
+
+export function getLoreContentBySlug(workDir: string, loreSlug: string): string | null {
+  const lorePath = path.join(workDir, 'lore', `${loreSlug}.md`)
+  if (!fs.existsSync(lorePath)) return null
+  const raw = fs.readFileSync(lorePath, 'utf8')
+  const { content } = matter(raw)
+  return content
 }

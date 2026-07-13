@@ -1,5 +1,5 @@
 <template>
-  <main class="max-w-4xl mx-auto py-12 px-4">
+  <main class="max-w-5xl mx-auto py-12 px-4">
     <div class="text-center mb-10">
       <h1 class="text-4xl font-bold text-gray-900 dark:text-white">
         Support My Writing ☕

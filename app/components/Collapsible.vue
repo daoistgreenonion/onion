@@ -2,7 +2,7 @@
   <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
     <button
       @click="expanded = !expanded"
-      class="flex items-start gap-2 hover:bg-gray-100/60"
+      class="flex items-start gap-2 hover:bg-gray-400/20 dark:hover:bg-gray-100/40 w-full"
       :aria-expanded="expanded"
     >
       <div class="text-brand dark:text-brand-lightest">

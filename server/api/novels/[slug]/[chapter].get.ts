@@ -1,5 +1,7 @@
 import { getNovelBySlug, getNovelChapterContent } from '../../../utils/works.server'
 import { extractSkipTargets, extractExplicitSections } from '../../../utils/markdown'
+import { processInlineLore } from '../../../utils/processInlineLore'
+import path from 'path'
 
 
 export default defineEventHandler((event) => {
@@ -26,6 +28,34 @@ export default defineEventHandler((event) => {
   // 2. process explicit sections (using a MarkdownIt instance)
   const { cleanedContent, explicitSections }  = extractExplicitSections(afterSkips)
 
+  // 3. Process inline lore
+  // … inside event handler, after explicitSections:
+  const workDir = path.join(
+    process.cwd(),
+    'content',
+    'novels',
+    novel.type === 'long-novel' ? 'long-novels' : 'short-novels',
+    slug
+  )
+
+  
+  const contentWithLore = processInlineLore(
+    cleanedContent,            // content already processed for explicit/skips
+    novel.lore || [],
+    novel.chapters,
+    chapter,
+    workDir
+  )
+
+  // 4. Filter lore for reading panels
+  const currentChapterIndex = novel.chapters.findIndex(ch => ch.slug === chapter)
+  const filteredLore = (novel.lore || []).filter(entry => {
+    if (!entry.loreChapter) return true
+    const unlockIndex = novel.chapters.findIndex(ch => ch.slug === entry.loreChapter)
+    return unlockIndex !== -1 && unlockIndex <= currentChapterIndex
+  })
+
+
   return {
     workTitle: novel.title,
     currentTitle: chapterData.title,
@@ -33,8 +63,8 @@ export default defineEventHandler((event) => {
     chapters: novel.chapters,
     backLink: `/novels/${slug}`,
     chapterBasePath: `/novels/${slug}`,
-    content: cleanedContent,
-    lore: novel.lore || null,
+    content: contentWithLore,
+    lore: filteredLore || null,
     workSlug: slug,
     workType: 'novels',
     skipTargets,

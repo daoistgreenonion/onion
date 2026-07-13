@@ -1,9 +1,12 @@
 <template>
-  <div class="p-4 max-w-none">
+  <div v-if="lore" class="p-4 max-w-none">
     <article class="prose prose-base dark:prose-invert max-w-none">
-      <h1>{{ lore.title }}</h1>
+      <h1 class="text-2xl">{{ lore.title }}</h1>
       <div v-html="renderedContent"></div>
     </article>
+  </div>
+  <div v-else class="p-4 text-red-500">
+    Lore not found or an error occurred.
   </div>
 </template>
 
@@ -14,12 +17,14 @@ definePageMeta({ layout: false })
 
 const route = useRoute()
 const { workType, slug, loreSlug } = route.params
+const chapterSlug = route.query.chapter || ''
 
-// Fetch lore content from API
-const { data: lore, error } = await useFetch(`/api/lore/${workType}/${slug}/${loreSlug}`)
+const apiUrl = `/api/lore/${workType}/${slug}/${loreSlug}` + (chapterSlug ? `?chapter=${chapterSlug}` : '')
+
+const { data: lore, error } = await useFetch(apiUrl)
 
 if (error.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Lore not found' })
+  console.error(error.value)
 }
 
 const md = new MarkdownIt({ html: true, breaks: true, typographer: true })

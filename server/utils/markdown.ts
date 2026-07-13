@@ -42,7 +42,7 @@ export function createMarkdownIt(): MarkdownIt {
       ? `<span class="block text-sm italic text-center text-gray-600 dark:text-gray-400 mt-1">${safeCaption}</span>`
       : ''
     const sourceHtml = sourceUrl
-      ? `<a href="${sourceUrl}" target="_blank" rel="noopener noreferrer" class="block text-xs text-center text-gray-500 dark:text-gray-400 mt-1 hover:underline">Source</a>`
+      ? `<a href="${sourceUrl}" target="_blank" rel="noopener noreferrer" class="block text-xs text-center text-gray-500 dark:text-gray-400 mt-1 hover:underline">Source (external link)</a>`
       : ''
 
     let wrapperClass = 'illustration w-full my-4'
