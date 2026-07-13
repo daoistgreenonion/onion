@@ -12,9 +12,13 @@
     :work-type="workType"
     :lore-open-handler="openLoreOverlay"
     :skipTargets="skipTargets"
-  />
-
-  <MobileReadingPanel
+    :showNavigation="showNavigation"
+    :prevChapter="prevChapter"
+    :nextChapter="nextChapter"
+    :current-slug="currentSlug"
+    />
+    
+    <MobileReadingPanel
     v-model="mobileSheetOpen"
     v-model:active-tab="activeTab"
     :work-title="workTitle"
@@ -27,24 +31,22 @@
     :work-type="workType"
     :lore-open-handler="openLoreOverlay"
     :skipTargets="skipTargets"
+    :showNavigation="showNavigation"
+    :prevChapter="prevChapter"
+    :nextChapter="nextChapter"
+    :current-slug="currentSlug"
   />
 
   <main class="max-w-3xl mx-auto px-4">
     <!-- Prev/Next navigation (top) -->
-    <nav v-if="showNavigation" class="flex justify-between items-center py-4 border-t border-b border-gray-200 dark:border-gray-700 my-4">
-      <div>
-        <NuxtLink v-if="prevChapter" :to="`${chapterBasePath}/${prevChapter.slug}`" class="text-xs sm:text-sm font-medium text-brand-lightest hover:underline">
-          ← Previous Chapter
-        </NuxtLink>
-        <span v-else class="text-sm text-gray-400 dark:text-gray-600">Start</span>
-      </div>
-      <!-- <div class="text-sm text-gray-500 dark:text-gray-400">Chapter {{ currentNumber }}</div> -->
-      <div>
-        <NuxtLink v-if="nextChapter" :to="`${chapterBasePath}/${nextChapter.slug}`" class="text-xs sm:text-sm font-medium text-brand-lightest hover:underline">
-          Next Chapter →
-        </NuxtLink>
-        <span v-else class="text-sm text-gray-400 dark:text-gray-600">End</span>
-      </div>
+    <nav v-if="showNavigation">
+      <ChapterNavigation
+        :prev-chapter="prevChapter"
+        :next-chapter="nextChapter"
+        :chapter-base-path="chapterBasePath"
+        :chapters="chapters"
+        :current-slug="currentSlug"
+      />
     </nav>
     <div v-else class="h-10"></div>
 
@@ -63,20 +65,14 @@
     </article>
 
     <!-- Prev/Next navigation (bottom) -->
-    <nav v-if="showNavigation" class="flex justify-between items-center py-4 border-t border-b border-gray-200 dark:border-gray-700 my-4">
-      <div>
-        <NuxtLink v-if="prevChapter" :to="`${chapterBasePath}/${prevChapter.slug}`" class="text-xs sm:text-sm font-medium text-brand-lightest hover:underline">
-          ← Previous Chapter
-        </NuxtLink>
-        <span v-else class="text-sm text-gray-400 dark:text-gray-600">Start</span>
-      </div>
-      <!-- <div class="text-sm text-gray-500 dark:text-gray-400">Chapter {{ currentNumber }}</div> -->
-      <div>
-        <NuxtLink v-if="nextChapter" :to="`${chapterBasePath}/${nextChapter.slug}`" class="text-xs sm:text-sm font-medium text-brand-lightest hover:underline">
-          Next Chapter →
-        </NuxtLink>
-        <span v-else class="text-sm text-gray-400 dark:text-gray-600">End</span>
-      </div>
+    <nav v-if="showNavigation">
+      <ChapterNavigation
+        :prev-chapter="prevChapter"
+        :next-chapter="nextChapter"
+        :chapter-base-path="chapterBasePath"
+        :chapters="chapters"
+        :current-slug="currentSlug"
+      />
     </nav>
   </main>
 
@@ -105,6 +101,7 @@ const explicitPreference = useExplicitPreference().explicitPreference
 const props = defineProps({
   workTitle: String,
   currentTitle: String,
+  currentSlug: { type: String, default: '' },
   chapters: Array,
   backLink: String,
   chapterBasePath: String,
@@ -125,7 +122,14 @@ const loreOpen = ref(false)
 const loreUrl = ref(null)
 
 // Chapter navigation
-const currentIndex = computed(() => props.chapters.findIndex(ch => ch.title === props.currentTitle))
+const currentIndex = computed(() => {
+  // prefer matching by slug if provided
+  if (props.currentSlug) {
+    return props.chapters.findIndex(ch => ch.slug === props.currentSlug)
+  }
+  // fallback to title (legacy behaviour)
+  return props.chapters.findIndex(ch => ch.title === props.currentTitle)
+})
 const prevChapter = computed(() => currentIndex.value > 0 ? props.chapters[currentIndex.value - 1] : null)
 const nextChapter = computed(() => currentIndex.value < props.chapters.length - 1 ? props.chapters[currentIndex.value + 1] : null)
 const showNavigation = computed(() => props.chapters.length > 1)
@@ -187,6 +191,27 @@ const contentParts = computed(() => {
   return parts
 })
 
+import { watch } from 'vue'
 
+// Lock background when lore overlay is open on mobile
+watch(loreOpen, (isOpen) => {
+  if (!import.meta.client) return
+  if (window.innerWidth >= 720) return   // desktop – do nothing
+
+  if (isOpen) {
+    const scrollY = window.scrollY
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${scrollY}px`
+    document.body.style.width = '100%'
+    document.body.style.overflow = 'hidden'
+  } else {
+    const scrollY = document.body.style.top
+    document.body.style.position = ''
+    document.body.style.top = ''
+    document.body.style.width = ''
+    document.body.style.overflow = ''
+    window.scrollTo(0, parseInt(scrollY || '0') * -1)
+  }
+})
 
 </script>

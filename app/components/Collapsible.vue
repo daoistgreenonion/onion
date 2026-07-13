@@ -18,7 +18,7 @@
           {{ title }}
         </h2>
         <p class="text-sm text-gray-600 dark:text-gray-300 h-min m-0 p-0" >
-          {{ expanded ? ' (expanded, click to hide)'  : ' (collapsed, click to show)' }}
+          {{ expanded ? ' (expanded, click to collapse)'  : ' (collapsed, click to expand)' }}
         </p>
       </div>
     </button>

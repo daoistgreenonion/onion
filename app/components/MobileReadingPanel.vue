@@ -19,7 +19,9 @@
       <!-- Header -->
       <div class="p-4 border-b border-gray-200 dark:border-gray-700 shrink-0">
         <div class="flex items-center justify-between">
-          <h2 class="font-semibold text-lg truncate">{{ workTitle }}</h2>
+          <NuxtLink :to="backLink" class="text-brand-lightest hover:underline mt-2 inline-block uppercase" @click="$emit('update:modelValue', false)">
+            <h2 class="font-semibold text-lg truncate">{{ workTitle }}</h2>
+          </NuxtLink>
           <button
             @pointerdown.prevent="$emit('update:modelValue', false)"
             class="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
@@ -31,9 +33,14 @@
           </button>
         </div>
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">{{ currentTitle }}</p>
-        <NuxtLink :to="backLink" class="text-sm text-brand-lightest hover:underline mt-2 inline-block uppercase" @click="$emit('update:modelValue', false)">
-          ← {{ workType }} Page
-        </NuxtLink>
+
+        <ChapterNavigation
+          :prev-chapter="prevChapter"
+          :next-chapter="nextChapter"
+          :chapter-base-path="chapterBasePath"
+          :chapters="chapters"
+          :current-slug="currentSlug"
+        />
 
         <!-- Tabs (unchanged) -->
         <div  class="flex border-b border-gray-200 dark:border-gray-700 mt-3 mb-2">
@@ -177,14 +184,15 @@
         <!-- Chapter list -->
         <template v-if="hasChapters && activeTab === 'chapters'">
           <NuxtLink
-            v-for="ch in chapters"
-            :key="ch.slug"
-            :to="`${chapterBasePath}/${ch.slug}`"
-            @click="$emit('update:modelValue', false)"
-            :class="['block px-2 py-2 rounded text-sm', ch.title === currentTitle ? 'bg-brand-light/20 text-brand-light' : 'hover:bg-gray-100 dark:hover:bg-gray-800']"
-          >
-            {{ ch.title }}
-          </NuxtLink>
+          v-for="ch in chapters"
+          :key="ch.slug"
+          :id="`chapter-${ch.slug}`"
+          :to="`${chapterBasePath}/${ch.slug}`"
+          @click="$emit('update:modelValue', false)"
+          :class="['block px-2 py-1 rounded text-sm', ch.slug  === currentSlug  ? 'bg-brand-light/20 text-brand-light active-chapter' : 'hover:bg-gray-100 dark:hover:bg-gray-800']"
+        >
+          {{ ch.title }}
+        </NuxtLink>
         </template>
 
         <!-- Lore list -->
@@ -221,15 +229,18 @@ const props = defineProps({
   activeTab: { type: String, required: true },
   loreOpenHandler: { type: Function, required: true },
   skipTargets: {type: Array, default: () => []},
+  showNavigation: Boolean,
+  prevChapter: {type: Object, default: null},
+  nextChapter: {type: Object, default: null},
+  currentSlug: { type: String, default: '' },
 })
 
 
 import { useFontSize } from '~/composables/useFontSize'
-const { fontSize, setFontSize } = useFontSize()
-
-
 import { useExplicitPreference } from '~/composables/useExplicitPreference'
+import { watch, nextTick, ref } from 'vue'
 
+const { fontSize, setFontSize } = useFontSize()
 const { explicitPreference, toggleExplicitPreference } = useExplicitPreference()
 
 const emit = defineEmits(['update:modelValue', 'update:activeTab', 'toggleExplicit'])
@@ -260,5 +271,33 @@ function toggleTheme() {
   isDark.value = !isDark.value
   applyTheme()
 }
+
+
+
+
+function scrollToCurrentChapter() {
+  if (props.currentSlug) {
+    nextTick(() => {
+      const el = document.getElementById(`chapter-${props.currentSlug}`)
+      if (el) {
+        el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+      }
+    })
+  }
+}
+
+// When the panel opens (mobile sheet / desktop panel)
+watch(() => props.modelValue, (newVal) => {
+  if (newVal && props.activeTab === 'chapters') {
+    scrollToCurrentChapter()
+  }
+})
+
+// When the user switches to the Chapters tab
+watch(() => props.activeTab, (newTab) => {
+  if (newTab === 'chapters' && props.modelValue) {
+    scrollToCurrentChapter()
+  }
+})
 
 </script>

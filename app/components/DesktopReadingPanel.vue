@@ -19,7 +19,9 @@
     <div class="p-4 h-full flex flex-col">
       <!-- Header -->
       <div class="flex items-center justify-between mb-4">
-        <h2 class="font-semibold text-lg truncate">{{ workTitle }}</h2>
+        <NuxtLink :to="backLink" class="text-brand-lightest hover:underline mt-2 inline-block uppercase" @click="$emit('update:modelValue', false)">
+          <h2 class="font-semibold text-lg truncate">{{ workTitle }}</h2>
+        </NuxtLink>
         <button
           @pointerdown.prevent="$emit('update:modelValue', false)"
           class="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
@@ -31,9 +33,15 @@
         </button>
       </div>
       <p v-if=" workType != 'short-stories'  " class="text-sm text-gray-500 dark:text-gray-400 mb-2 truncate">{{ currentTitle }}</p>
-      <NuxtLink :to="backLink" class="text-sm text-brand-lightest hover:underline mb-4 uppercase inline-block" @click="$emit('update:modelValue', false)">
-        ← {{ workType }} Page
-      </NuxtLink>
+
+
+      <ChapterNavigation
+        :prev-chapter="prevChapter"
+        :next-chapter="nextChapter"
+        :chapter-base-path="chapterBasePath"
+        :chapters="chapters"
+        :current-slug="currentSlug"
+      />
 
       <!-- Tabs -->
       <div  class="flex border-b border-gray-200 dark:border-gray-700 mb-3">
@@ -177,9 +185,10 @@
         <NuxtLink
           v-for="ch in chapters"
           :key="ch.slug"
+          :id="`chapter-${ch.slug}`"
           :to="`${chapterBasePath}/${ch.slug}`"
           @click="$emit('update:modelValue', false)"
-          :class="['block px-2 py-1 rounded text-sm', ch.title === currentTitle ? 'bg-brand-light/20 text-brand-light' : 'hover:bg-gray-100 dark:hover:bg-gray-800']"
+          :class="['block px-2 py-1 rounded text-sm', ch.slug  === currentSlug  ? 'bg-brand-light/20 text-brand-light active-chapter' : 'hover:bg-gray-100 dark:hover:bg-gray-800']"
         >
           {{ ch.title }}
         </NuxtLink>
@@ -214,16 +223,20 @@ const props = defineProps({
   activeTab: { type: String, required: true },
   loreOpenHandler: { type: Function, required: true },
   skipTargets: {type: Array, default: () => []},
+  showNavigation: Boolean,
+  prevChapter: {type: Object, default: null},
+  nextChapter: {type: Object, default: null},
+  currentSlug: { type: String, default: '' },
 })
 
 
-
 import { useFontSize } from '~/composables/useFontSize'
-const { fontSize, setFontSize } = useFontSize()
+import { useExplicitPreference } from '~/composables/useExplicitPreference'
+import { watch, nextTick, ref } from 'vue'
 
+const { fontSize, setFontSize } = useFontSize()
 const emit = defineEmits(['update:modelValue', 'update:activeTab', 'toggleExplicit'])
 
-import { useExplicitPreference } from '~/composables/useExplicitPreference'
 
 const { explicitPreference, toggleExplicitPreference } = useExplicitPreference()
 
@@ -253,5 +266,48 @@ function toggleTheme() {
   isDark.value = !isDark.value
   applyTheme()
 }
+
+// const panelRef = ref(null)   // put ref on the panel’s root scrolling container
+
+// watch(() => props.activeTab, async (newVal) => {
+//   if (newVal === "chapters") {
+//     console.log('works')
+//     await nextTick()
+//     const active = panelRef.value?.querySelector('.active-chapter')
+//     console.log(active)
+//     if (active) {
+//       active.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+//     }
+//   }
+// })
+
+
+
+
+function scrollToCurrentChapter() {
+  if (props.currentSlug) {
+    nextTick(() => {
+      const el = document.getElementById(`chapter-${props.currentSlug}`)
+      if (el) {
+        el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+      }
+    })
+  }
+}
+
+// When the panel opens (mobile sheet / desktop panel)
+watch(() => props.modelValue, (newVal) => {
+  if (newVal && props.activeTab === 'chapters') {
+    scrollToCurrentChapter()
+  }
+})
+
+// When the user switches to the Chapters tab
+watch(() => props.activeTab, (newTab) => {
+  if (newTab === 'chapters' && props.modelValue) {
+    scrollToCurrentChapter()
+  }
+})
+
 
 </script>

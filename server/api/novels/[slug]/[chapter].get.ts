@@ -29,6 +29,7 @@ export default defineEventHandler((event) => {
   return {
     workTitle: novel.title,
     currentTitle: chapterData.title,
+    currentSlug: chapter,  
     chapters: novel.chapters,
     backLink: `/novels/${slug}`,
     chapterBasePath: `/novels/${slug}`,

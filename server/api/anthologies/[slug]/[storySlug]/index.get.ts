@@ -27,6 +27,7 @@ export default defineEventHandler((event) => {
   return {
     workTitle: anthology.title,
     currentTitle: content.title,
+    currentSlug: storySlug,       
     chapters: stories.map(s => ({ slug: s.slug, title: s.title })),
     backLink: `/anthologies/${slug}`,
     chapterBasePath: `/anthologies/${slug}`,

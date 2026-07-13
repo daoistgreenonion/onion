@@ -11,8 +11,6 @@
 
 <script setup>
 definePageMeta({ layout: 'reader' })
-// import { useExplicitPreference } from '~/composables/useExplicitPreference'
-// const { explicitPreference } = useExplicitPreference()
 
 const route = useRoute()
 const { data, error } = await useFetch(`/api/shorts/${route.params.slug}`)
