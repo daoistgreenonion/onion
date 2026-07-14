@@ -1,4 +1,6 @@
-Side Characters.
-
+---
+title: Side Characters
+chapter: chapter-0005
+---
 
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt necessitatibus aliquid magnam sit nobis molestias sapiente nulla, odit veritatis saepe illum molestiae vero exercitationem laudantium repellat iusto atque nostrum dolor doloribus est soluta quasi nihil placeat! Perferendis amet ipsa a dolorum, praesentium sint minus recusandae voluptas ad, debitis maxime doloremque suscipit accusamus minima. Velit sit voluptate dolorem, deserunt reiciendis quisquam ad! Tenetur tempore animi voluptatem! Numquam atque odio harum fugit exercitationem quas iure, beatae eligendi aperiam, dolor aspernatur nobis recusandae facilis tenetur dignissimos magni. Eaque aliquam vero culpa! Sed, totam magnam. Debitis, veniam? Assumenda accusamus, veniam molestias hic magni blanditiis.

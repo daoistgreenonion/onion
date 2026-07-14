@@ -37,7 +37,7 @@
     :current-slug="currentSlug"
   />
 
-  <main class="max-w-3xl mx-auto px-4">
+  <main class="max-w-2xl lg:max-w-[50%] 2xl:max-w-3xl mx-auto px-4">
     <!-- Prev/Next navigation (top) -->
     <nav v-if="showNavigation">
       <ChapterNavigation
@@ -58,6 +58,7 @@
           v-else-if="part.type === 'explicit'"
           :title="part.title"
           :open="explicitPreference === 'expanded'"
+          type="explicit"
         >
           <div v-html="part.html" />
         </Collapsible>
@@ -137,9 +138,13 @@ const showNavigation = computed(() => props.chapters.length > 1)
 const currentNumber = computed(() => currentIndex.value + 1)
 
 
+
 function openLoreOverlay(url) {
-  // url is like `/embed-lore/novels/invictus/side-characters`
-  const fullUrl = `${url}?chapter=${props.currentSlug}`
+  const params = new URLSearchParams({
+    chapter: props.currentSlug || '',
+    explicit: explicitPreference.value,  // ← .value!
+  })
+  const fullUrl = `${url}?${params.toString()}`
   loreUrl.value = fullUrl
   loreOpen.value = true
 }

@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.14.0",
+    "@tailwindcss/typography": "^0.5.20",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^26.1.1"
   }

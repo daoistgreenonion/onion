@@ -61,8 +61,8 @@ const emit = defineEmits(['close'])
       </div>
     </div> -->
     <!-- Desktop: left‑side panel (pointer‑events‑auto on the panel only) -->
-    <div class="hidden sm:flex w-full h-full justify-start">
-      <div class="relative w-1/2 h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 shadow-xl pointer-events-auto">
+    <div class="fixed inset-0 z-50  top-11 hidden sm:flex w-full justify-start" style="height: calc(100vh - 3rem);">
+      <div class="relative w-1/2 max-w-[50%] lg:max-w-[22%] 2xl:max-w-[24rem]  h-full bg-white dark:bg-gray-900 border-r border-t border-b border-gray-200 dark:border-gray-700 shadow-xl pointer-events-auto">
         <button
           @pointerdown.prevent="$emit('close')"
           class="absolute top-4 right-4 z-10 p-1 bg-white dark:bg-gray-800/50 rounded shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"

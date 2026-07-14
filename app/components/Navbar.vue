@@ -10,9 +10,9 @@
       : 'bg-white dark:bg-dark border-gray-200 dark:border-gray-700'
   "
 >
-    <nav class="max-w-5xl mx-auto px-4 py-1 flex items-center justify-between transition-all">
+    <nav class="px-4 flex items-center justify-between transition-all" :class= "readingPage  ? 'h-10' : 'py-1', lorePage ? 'max-w-none' : 'max-w-5xl mx-auto'">
       <!-- Logo -->
-      <NuxtLink to="/" class="flex shrink-0 transition-all flex items-center lg:mr-12" :class="isHomePage ? isAtTop ? 'opacity-60 hover:opacity-100 text-brand-lightest dark:text-brand' : 'opacity-80 hover:opacity-100 text-brand' : 'opacity-80 hover:opacity-100 text-brand'">
+      <NuxtLink to="/" class="flex shrink-0 transition-all flex items-center" :class="isHomePage ? isAtTop ? 'opacity-60 hover:opacity-100 text-brand-lightest dark:text-brand' : 'opacity-80 hover:opacity-100 text-brand' : 'opacity-80 hover:opacity-100 text-brand' , lorePage ? 'lg:mr-[15%] lg:ml-2' : 'lg:mr-12'">
         <img src="/images/seal.png" alt="Site logo" class="w-auto" :class= "readingPage  ? 'h-10' : 'h-16'"/>
         <p class="hidden sm:flex font-bold text-md">DaoistGreenOnion</p>
         <p class="flex sm:hidden font-bold text-xl">DGO</p>
@@ -21,7 +21,6 @@
 
 
       <div class="flex w-full justify-end md:justify-between gap-1 lg:gap-2">
-        <!-- Central links -->
         <div class="flex gap-0.5 lg:gap-2">
   
           <!-- Desktop links -->
@@ -137,6 +136,7 @@
             <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
+        <!-- Central links -->
       </div>
 
     </nav>
@@ -164,6 +164,7 @@
 <script setup>
 const props =  defineProps ({
   readingPage : Boolean,
+  lorePage : Boolean,
 })
 
 

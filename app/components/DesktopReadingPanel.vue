@@ -14,7 +14,9 @@
   <!-- Side panel -->
   <div
     v-if="modelValue"
-    class="hidden sm:block fixed top-0 right-0 h-full w-xl lg:w-1/4 bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700 shadow-xl z-50"
+    class="hidden sm:block fixed top-11 right-0 w-full bg-white dark:bg-gray-900 border-l border-t border-b border-gray-200 dark:border-gray-700 shadow-xl z-50"
+    :class=" loreOnly ? 'max-w-[28%] xl:max-w-sm' : 'max-w-[50%] lg:max-w-[22%] 2xl:max-w-[24rem]'"
+    style="height: calc(100vh - 3rem);"
   >
     <div class="p-4 h-full flex flex-col">
       <!-- Header -->
@@ -22,7 +24,7 @@
         <NuxtLink :to="backLink" class="text-brand-lightest hover:underline mt-2 inline-block uppercase" @click="$emit('update:modelValue', false)">
           <h2 class="font-semibold text-lg truncate">{{ workTitle }}</h2>
         </NuxtLink>
-        <button
+        <button v-if="!loreOnly"
           @pointerdown.prevent="$emit('update:modelValue', false)"
           class="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
           aria-label="Close panel"
@@ -32,7 +34,23 @@
           </svg>
         </button>
       </div>
-      <p v-if=" workType != 'short-stories'  " class="text-sm text-gray-500 dark:text-gray-400 mb-2 truncate">{{ currentTitle }}</p>
+      <p v-if=" (workType != 'short-stories' ) && !loreOnly " class="text-sm text-gray-500 dark:text-gray-400 mb-2 truncate">{{ currentTitle }}</p>
+
+
+      <div v-if="loreOnly" class="border-b border-gray-600 darl:border-gray-300 pb-1">
+        <label for="lore-chapter-select" class="text-sm text-gray-600 dark:text-gray-400">
+          Lore as of chapter
+        </label>
+        <select
+          id="lore-chapter-select"
+          class="ml-2 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          @change="$emit('update:selectedChapter', ($event.target).value)"
+        >
+          <option v-for="ch in chapters" :key="ch.slug" :value="ch.slug">
+            {{ ch.title }}
+          </option>
+        </select>
+      </div>
 
 
       <ChapterNavigation
@@ -44,8 +62,8 @@
       />
 
       <!-- Tabs -->
-      <div  class="flex border-b border-gray-200 dark:border-gray-700 mb-3">
-        <button
+      <div v-if="!loreOnly"  class="flex border-b border-gray-200 dark:border-gray-700 mb-3">
+        <button v-if="!loreOnly"
           @pointerdown.prevent="$emit('update:activeTab', 'settings')"
           :class="['flex-1 py-2 text-sm font-medium text-center', activeTab === 'settings' ? 'text-brand-lightest border-b-2 border-brand-lightest' : 'text-gray-500 dark:text-gray-400 border-b-2 border-transparent']"
         >
@@ -212,9 +230,10 @@
 <script setup>
 const props = defineProps({
   modelValue: { type: Boolean, required: true },
+  selectedChapter: { type: String, default: ''},
   workTitle: String,
   currentTitle: String,
-  chapters: Array,
+  chapters: { type: Array, default: () => [] },
   lore: { type: Array, default: () => [] },
   backLink: String,
   chapterBasePath: String,
@@ -227,6 +246,7 @@ const props = defineProps({
   prevChapter: {type: Object, default: null},
   nextChapter: {type: Object, default: null},
   currentSlug: { type: String, default: '' },
+  loreOnly: Boolean,
 })
 
 
@@ -235,7 +255,7 @@ import { useExplicitPreference } from '~/composables/useExplicitPreference'
 import { watch, nextTick, ref } from 'vue'
 
 const { fontSize, setFontSize } = useFontSize()
-const emit = defineEmits(['update:modelValue', 'update:activeTab', 'toggleExplicit'])
+const emit = defineEmits(['update:modelValue', 'update:activeTab', 'update:selectedChapter', 'toggleExplicit',])
 
 
 const { explicitPreference, toggleExplicitPreference } = useExplicitPreference()
@@ -266,22 +286,6 @@ function toggleTheme() {
   isDark.value = !isDark.value
   applyTheme()
 }
-
-// const panelRef = ref(null)   // put ref on the panel’s root scrolling container
-
-// watch(() => props.activeTab, async (newVal) => {
-//   if (newVal === "chapters") {
-//     console.log('works')
-//     await nextTick()
-//     const active = panelRef.value?.querySelector('.active-chapter')
-//     console.log(active)
-//     if (active) {
-//       active.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
-//     }
-//   }
-// })
-
-
 
 
 function scrollToCurrentChapter() {

@@ -32,7 +32,10 @@
             </svg>
           </button>
         </div>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">{{ currentTitle }}</p>
+        <p v-if="!loreOnly" class="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">{{ currentTitle }}</p>
+
+        
+
 
         <ChapterNavigation
           :prev-chapter="prevChapter"
@@ -43,8 +46,8 @@
         />
 
         <!-- Tabs (unchanged) -->
-        <div  class="flex border-b border-gray-200 dark:border-gray-700 mt-3 mb-2">
-          <button
+        <div v-if="!loreOnly"  class="flex border-b border-gray-200 dark:border-gray-700 mt-3 mb-2">
+          <button v-if="!loreOnly"
             @pointerdown.prevent="$emit('update:activeTab', 'settings')"
             :class="['flex-1 py-2 text-sm font-medium text-center', activeTab === 'settings' ? 'text-brand-lightest border-b-2 border-brand-lightest' : 'text-gray-500 dark:text-gray-400 border-b-2 border-transparent']"
           >
@@ -208,7 +211,25 @@
         </template>
       </div>
 
+      
+
       <!-- Empty spacer at the bottom -->
+      <div class="h-16 shrink-0 border-t border-gray-200 dark:border-gray-700 flex items-center justify-center">
+        <div v-if="loreOnly" class="">
+        <label for="lore-chapter-select" class="text-sm text-gray-600 dark:text-gray-400">
+          Lore as of chapter
+        </label>
+        <select
+          id="lore-chapter-select"
+          class="ml-2 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          @change="$emit('update:selectedChapter', ($event.target).value)"
+        >
+          <option v-for="ch in chapters" :key="ch.slug" :value="ch.slug">
+            {{ ch.title }}
+          </option>
+        </select>
+      </div>
+      </div>
       <div class="h-16 shrink-0 border-t border-gray-200 dark:border-gray-700"></div>
     </div>
   </div>
@@ -218,6 +239,7 @@
 <script setup>
 const props = defineProps({
   modelValue: { type: Boolean, required: true },
+  selectedChapter: { type: String, default: ''},
   workTitle: String,
   currentTitle: String,
   chapters: Array,
@@ -233,6 +255,7 @@ const props = defineProps({
   prevChapter: {type: Object, default: null},
   nextChapter: {type: Object, default: null},
   currentSlug: { type: String, default: '' },
+  loreOnly: Boolean
 })
 
 
@@ -243,7 +266,7 @@ import { watch, nextTick, ref } from 'vue'
 const { fontSize, setFontSize } = useFontSize()
 const { explicitPreference, toggleExplicitPreference } = useExplicitPreference()
 
-const emit = defineEmits(['update:modelValue', 'update:activeTab', 'toggleExplicit'])
+const emit = defineEmits(['update:modelValue', 'update:activeTab', 'update:selectedChapter', 'toggleExplicit'])
 
 const hasChapters = computed(() => props.chapters?.length > 0)
 const hasLore = computed(() => props.lore?.length > 0)

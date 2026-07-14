@@ -56,10 +56,13 @@ export default defineNuxtConfig({
         ({ addVariant }: { addVariant: (name: string, selector: string) => void }) => {
           addVariant('explicit', ':where(.explicit) &')
         },
+        require('@tailwindcss/typography'),
       ],
     },
   },
-
+  alias: {
+    '~utils': './utils',
+  },
   routeRules: {
     '/embed-lore/**': {
       headers: {
@@ -154,13 +157,6 @@ export default defineNuxtConfig({
           // Run immediately, not deferred
           type: 'text/javascript',
         },
-      ],
-      link:[
-        {
-          rel:"shortcut icon",
-          href:"/favicon.ico",
-          type:"image/x-icon",
-        }
       ],
     },
   },

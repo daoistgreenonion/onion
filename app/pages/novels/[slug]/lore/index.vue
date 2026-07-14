@@ -1,9 +1,5 @@
 <template>
-  <main class="max-w-4xl mx-auto py-12 px-4">
-    <NuxtLink :to="`/novels/${slug}`" class="text-brand-lightest hover:underline mb-4 inline-block">
-      ← Back to novel
-    </NuxtLink>
-    <h1 class="text-3xl font-bold mb-4">Lore</h1>
+  <main class="px-4">
     <LoreReader
       v-if="novel && novel.lore?.length"
       :work-title="novel.title"
@@ -20,7 +16,7 @@
 </template>
 
 <script setup>
-definePageMeta({ layout: 'reader' })
+definePageMeta({ layout: 'lore' })
 
 const route = useRoute()
 const slug = route.params.slug

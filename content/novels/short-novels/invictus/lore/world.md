@@ -1,3 +1,41 @@
-Livaria
+---
+title: "Livaria"
+---
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt necessitatibus aliquid magnam sit nobis molestias sapiente nulla, odit veritatis saepe illum molestiae vero exercitationem laudantium repellat iusto atque nostrum dolor doloribus est soluta quasi nihil placeat! Perferendis amet ipsa a dolorum, praesentium sint minus recusandae voluptas ad, debitis maxime doloremque suscipit accusamus minima. Velit sit voluptate dolorem, deserunt reiciendis quisquam ad! Tenetur tempore animi voluptatem! Numquam atque odio harum fugit exercitationem quas iure, beatae eligendi aperiam, dolor aspernatur nobis recusandae facilis tenetur dignissimos magni. Eaque aliquam vero culpa! Sed, totam magnam. Debitis, veniam? Assumenda accusamus, veniam molestias hic magni blanditiis.
+This is always visible.
+
+[[lock 4]]
+Elemental magic explained. (visible from chapter 4 onward)
+[[/lock]]
+
+[[sunset 7]]
+The old theory of magic. (visible only before chapter 7)
+
+[[lock 3]]
+But after chapter 3, an addition. (visible from chapter 3 to 7)
+[[/lock]]
+[[/sunset]]
+
+
+This is always visible.
+
+[[collapsible:Ancient History]]
+Long text about ancient history goes here. It can include **bold**, *italic*, images, etc.
+
+[[lock 3]]
+This part is only visible from chapter 3 onwards.
+[[/lock]]
+[[/collapsible]]
+
+More visible content.
+
+
+## Normal collapsible (always manual)
+[[collapsible:Ancient History]]
+Long text here…
+[[/collapsible]]
+
+## Explicit collapsible (respects global preference)
+[[explicit:Mature Content]]
+Some mature details…
+[[/explicit]]

@@ -15,10 +15,22 @@
 </template>
 
 <script setup>
-definePageMeta({ layout: 'reader' })
+definePageMeta({ layout: false })
 
 const route = useRoute()
-const { slug, loreSlug } = route.params
-const { data: novel } = await useFetch(`/api/novels/${slug}`)
-</script>
+const { workType, slug, loreSlug } = route.params
+const chapterSlug = route.query.chapter || ''
+const explicitPref = route.query.explicit || 'collapsed'
 
+const params = new URLSearchParams()
+if (chapterSlug) params.set('chapter', chapterSlug)
+if (explicitPref) params.set('explicit', explicitPref)
+
+const apiUrl = `/api/lore/${workType}/${slug}/${loreSlug}?${params.toString()}`
+
+const { data: lore, error } = await useFetch(apiUrl)
+
+if (error.value) {
+  console.error(error.value)
+}
+</script>

@@ -5,7 +5,7 @@
     </h1>
 
     <div class="prose prose-gray dark:prose-invert max-w-none space-y-6">
-      <div class="flex flex-col gap-4 p-6 sm:p-12">
+      <div class="p-6 sm:p-12">
         <p>
           Welcome to my website! I'm DaoistGreenOnion. This is where I share my stories, novels, and worlds with you. 
         </p>
@@ -14,7 +14,7 @@
         </p>
       </div>
       <Collapsible title="...Explicit Content Access and Visibility" :open="true">
-        <div class="flex flex-col gap-4">
+        <div>
           <p>
             To ensure best experience for everyone, explicit content (not appropriate for minors to view, and not appropriate for work) can be hidden site-wide (this includes listing of works that contain explicit content) with a simple button in the navigation bar at the top of the page. Click on the icon to change the content filtering mode. By choosing to display the explicit content you confirm that you are of legal age.
           </p>
@@ -39,7 +39,9 @@
             If you are already on the novel page that contains explicit content, this feature will not automatically reroute you to another page, it only works as a means of restricting access to getting to the page containing explicit content to begin with.
           </p>
     
-          <p>Sometimes, even when you are an adult, and not at work, you may not feel like reading a NSFW scene at the moment, (the plot is just too good and you can't wait to read ahead lol), anyway, jokes aside, all in-chapter/in-story explicit content on the reading pages is nested inside collapsible sections just like the ones on this About Page. Those containing Explicit Content are clearly labeled as such (i.e. Explicit Content) They are all collapsed by default when the site-wide NSFW content is disabled, and expanded by default if the NSFW content is enabled. You can expand and collapse them individually by clicking on the "Expand"/"Collapse" WITHOUT affecting the global NSFW setting if you feel like skipping a particular scene.</p>
+          <p>Sometimes, even when you are an adult, and not at work, you may not feel like reading a NSFW scene at the moment, (the plot is just too good and you can't wait to read ahead lol), anyway, jokes aside, all in-chapter/in-story explicit content on the reading pages is nested inside collapsible sections just like the ones on this About Page. But those containing Explicit Content are clearly labeled as such (i.e. titled Explicit Content, and use different icons) They are all collapsed by default when the site-wide NSFW content is disabled, and expanded by default if the NSFW content is enabled. You can expand and collapse them individually by clicking on the "Expand"/"Collapse" WITHOUT affecting the global NSFW setting if you feel like skipping a particular scene.</p>
+
+          <p>The explicit content collapsible section icons are these:</p>
     
           <div class="grid grid-cols-[1fr,2fr,3fr] gap-y-2">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,7 +62,7 @@
       
       
       <Collapsible title="...Reading Page Functionality" :open="true">
-        <div class="flex flex-col gap-4">
+        <div>
           <p>
             On every novel and short story reading page (actual story text page) you’ll find a handy reading panel that gives you quick access to everything you need to enhance reading experience without leaving the story. Everything stays out of the way while you read, but it’s always just a tap or click away when you need it.
           </p>
@@ -88,9 +90,9 @@
       </Collapsible>
 
       <Collapsible title="...Lore" :open="true">
-        <div class="flex flex-col gap-4">
+        <div>
           <p>
-            Some novels and anthologies include optional lore entries — extra notes about the world, characters, or magic systems. Because lore is always tied to a specific story, there's no separate lore link in navigation. Instead, you'll find the link to the lore of the specific novel in that novel's description.
+            Because lore is always tied to a specific story, there's no separate lore link in top-site navigation. Instead, you'll find the link to the lore of the specific novel in that novel's description.
           </p>
           
           <p>
@@ -100,10 +102,12 @@
           <p>
             On desktop, open the side panel and switch to the Lore tab to browse entries while the chapter stays visible beside you. On mobile, tap the floating button at the bottom‑right to bring up the bottom sheet and select the Lore tab. Tapping an entry opens it in a full‑screen overlay, keeping your reading spot safely preserved behind it.
           </p>
+
+          <p>But there is a far more important part of the lore pages, which is chapter-sensitive content. The main frustration I always had with publishing lore was spoilers, as well as revealing interesting information before it made sense in the context of the novel. I always thought that lore should be a tool to be able to remember things that you might have forgotten, not spoiling the fun of knowing what happens ahead. The lore on this website is sensitive to the chapter which it is viewed from (if you are viewing the lore from the reading page panel), and if you access lore directly through the novel/story page, you can specify which chapter you are reading on to view lore which is adjusted to your current reading, with no fear of spoilers or seeing something that has not happened yet.</p>
         </div>
       </Collapsible>
 
-      <div class="flex flex-col gap-4 p-6 sm:p-12">
+      <div class="p-6 sm:p-12">
         <p>
           We're done with going over the functions for now, perhaps later there will be more there. 
         </p>
@@ -113,7 +117,7 @@
       </div>
       
       <Collapsible title="...Why I built this Website" :open="true">
-        <div class="flex flex-col gap-4">
+        <div>
           <p>
             I made this website purely for your entertainment, there's really not much more to it. I first had the idea when I asked my readers on the Discord Server if I should move away from Discord because of their changes in terms and services in regards to their data collection, content policy, as well as identity verification. I grew increasigly frustrated as after looking for possible alternatives, that all possible platforms I could move the server to had similar terms of service in regards to privacy and data collection. I am of the generation of older internet where data collection wasn't normal, and privacy was more of a guarantee than a suggestion ^^. 
           </p>
@@ -124,15 +128,12 @@
           <p>
             I also remembered the feeling of uncertainty of having no fallback platform through which I could freely deliver content, news and announcements, and interact with my readers, in case I really had to or wanted to leave Discord. And so, the initial idea for this website was born. Eventually the idea became a fixation I couldn't get rid of so I made this first very light and simplistic version of what I initially envisioned. It's just a static website for now to share my works and updaates (you can call them news or announcements I guess, I chose "News" for the website since its the shortes word lol) with my readers. But perhaps with time it could grow into something more if need arises.
           </p>
+          <p>
+            With that in mind, I guess I should touch on the Terms and Services as well as Privacy Policy, just briefly and in general terms, there are dedicated pages for them (links in the footer at the very bottom of every page).
+          </p>
         </div>
       </Collapsible>
       
-      <div class="flex flex-col gap-4 p-6 sm:p-12">
-        <p>
-          With that in mind, I guess I should touch on the Terms and Services as well as Privacy Policy, just briefly and in general terms, there are dedicated pages for them (links in the footer at the very bottom of every page):
-        </p>
-      </div>
-
 
       <Collapsible title="...Privacy and Terms" :open="true">
         <div class="flex flex-col gap-4">

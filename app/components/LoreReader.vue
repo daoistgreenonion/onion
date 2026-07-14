@@ -1,58 +1,46 @@
 <template>
   <div>
-    <!-- Chapter selector – always shown, defaults to first chapter -->
-    <div class="max-w-4xl mx-auto px-4 pt-4">
-      <label for="lore-chapter-select" class="text-sm text-gray-600 dark:text-gray-400">
-        Show lore as of chapter
-      </label>
-      <select
-        id="lore-chapter-select"
-        v-model="selectedChapter"
-        class="ml-2 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-      >
-        <option v-for="ch in chapters" :key="ch.slug" :value="ch.slug">
-          {{ ch.title }}
-        </option>
-      </select>
-    </div>
-
     <DesktopReadingPanel
       v-model="desktopPanelOpen"
+      v-model:activeTab = "activeTab" 
+      v-model:selectedChapter = "selectedChapter"
       :work-title="workTitle"
-      :lore="lore"
-      :chapters="chapters"
-      :lore-chapter-slug="selectedChapter"
+      :lore="filteredLore"
+      :chapters= "chapters"
       :work-slug="workSlug"
       :work-type="workType"
       :lore-open-handler="handleLoreClick"
-      active-tab="lore"
       :back-link="backLink"
       chapter-base-path=""
       current-title="Lore"
-      :skip-targets="[]"
-      :explicit-sections="[]"
+      activeTab="lore"
+      :loreOnly="true"
+      @update:selectedChapter="(val) => selectedChapter = val"
     />
 
     <MobileReadingPanel
       v-model="mobileSheetOpen"
+      v-model:activeTab = "activeTab" 
+      v-model:selectedChapter = "selectedChapter"
       :work-title="workTitle"
-      :lore="lore"
-      :chapters="chapters"
-      :lore-chapter-slug="selectedChapter"
+      :lore="filteredLore"
+      :chapters= "chapters"
       :work-slug="workSlug"
       :work-type="workType"
       :lore-open-handler="handleLoreClick"
-      active-tab="lore"
       :back-link="backLink"
       chapter-base-path=""
       current-title="Lore"
+      activeTab="lore"
+      :loreOnly="true"
+      @update:selectedChapter="(val) => selectedChapter = val"
     />
 
-    <main class="max-w-4xl mx-auto py-12 px-4">
+    <main class="pt-2 sm:px-4">
       <iframe
         v-if="iframeSrc"
         :src="iframeSrc"
-        class="w-full h-[80vh] border-0 rounded-lg shadow-md bg-white dark:bg-gray-900"
+        class="w-full h-[90vh] border-0 rounded-lg shadow-md bg-white dark:bg-gray-900"
         title="Lore"
         sandbox="allow-scripts allow-same-origin"
       />
@@ -65,6 +53,8 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useExplicitPreference } from '~/composables/useExplicitPreference'
+const { explicitPreference } = useExplicitPreference()
 
 const props = defineProps({
   workTitle: String,
@@ -76,8 +66,9 @@ const props = defineProps({
   chapters: { type: Array, default: () => [] },
 })
 
-const desktopPanelOpen = ref(false)
+const desktopPanelOpen = ref(true)
 const mobileSheetOpen = ref(false)
+const activeTab = ref('lore')
 
 // If a specific lore slug is given (direct link), pre‑select it; otherwise default to first chapter.
 const selectedChapter = ref(props.chapters?.[0]?.slug || '')
@@ -85,10 +76,12 @@ const selectedLoreSlug = ref(props.initialSlug || props.lore?.[0]?.slug || null)
 
 const iframeSrc = computed(() => {
   if (!selectedLoreSlug.value) return ''
+  const params = new URLSearchParams()
+  if (selectedChapter.value) params.set('chapter', selectedChapter.value)
+  if (explicitPreference.value) params.set('explicit', explicitPreference.value)
   let url = `/embed-lore/${props.workType}/${props.workSlug}/${selectedLoreSlug.value}`
-  if (selectedChapter.value) {
-    url += `?chapter=${selectedChapter.value}`
-  }
+  const qs = params.toString()
+  if (qs) url += `?${qs}`
   return url
 })
 
@@ -98,4 +91,16 @@ function handleLoreClick(url) {
   const slug = parts[parts.length - 1]
   selectedLoreSlug.value = slug
 }
+
+// computed property
+const filteredLore = computed(() => {
+  if (!props.lore) return []
+  return props.lore.filter(entry => {
+    if (!entry.loreChapter) return true
+    const reqIndex = props.chapters.findIndex(ch => ch.slug === entry.loreChapter)
+    const curIndex = props.chapters.findIndex(ch => ch.slug === selectedChapter.value)
+    return reqIndex !== -1 && reqIndex <= curIndex
+  })
+})
+
 </script>
