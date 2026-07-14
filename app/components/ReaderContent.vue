@@ -16,7 +16,8 @@
     :prevChapter="prevChapter"
     :nextChapter="nextChapter"
     :current-slug="currentSlug"
-    />
+    :selectedLoreSlug = "selectedLoreSlug"
+  />
     
     <MobileReadingPanel
     v-model="mobileSheetOpen"
@@ -35,6 +36,7 @@
     :prevChapter="prevChapter"
     :nextChapter="nextChapter"
     :current-slug="currentSlug"
+    :selectedLoreSlug = "selectedLoreSlug"
   />
 
   <main class="max-w-2xl lg:max-w-[50%] 2xl:max-w-3xl mx-auto px-4">
@@ -135,11 +137,15 @@ const currentIndex = computed(() => {
 const prevChapter = computed(() => currentIndex.value > 0 ? props.chapters[currentIndex.value - 1] : null)
 const nextChapter = computed(() => currentIndex.value < props.chapters.length - 1 ? props.chapters[currentIndex.value + 1] : null)
 const showNavigation = computed(() => props.chapters.length > 1)
-const currentNumber = computed(() => currentIndex.value + 1)
 
-
+const selectedLoreSlug = ref('')
 
 function openLoreOverlay(url) {
+  // url is like `/embed-lore/novels/slug/loreSlug`
+  const parts = url.split('/')
+  const slug = parts[parts.length - 1]
+  selectedLoreSlug.value = slug
+
   const params = new URLSearchParams({
     chapter: props.currentSlug || '',
     explicit: explicitPreference.value,  // ← .value!

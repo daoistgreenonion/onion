@@ -125,8 +125,6 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
       })
   }
 
-  console.log('lore_order from meta:', data.lore_order)
-  console.log('lore slugs before sort:', lore.map(e => e.slug))
 
   // Apply custom lore order if provided in meta.md
   if (data.lore_order && Array.isArray(data.lore_order)) {
@@ -142,8 +140,6 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
     })
   }
 
-  console.log('lore_order from meta:', data.lore_order)
-  console.log('lore slugs after sort:', lore.map(e => e.slug))
 
   return {
     slug,

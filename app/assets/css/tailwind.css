@@ -18,6 +18,12 @@
   /* float: left; */
   line-height: 0.9;
   margin-right: 0.2rem;
+  
+  color: theme('colors.brand');
+  font-weight: 100 !important;
+}
+
+.dark .drop-cap::first-letter {
   color: theme('colors.brand-light');
 }
 
@@ -74,3 +80,9 @@
 
 /* Regular collapsible icon spin */
 .collapsible-section.open .collapsible-icon { transform: rotate(45deg); }
+
+/* @layer utilities {
+  .drop-cap::first-letter {
+    @apply text-brand dark:text-brand-light;
+  }
+} */

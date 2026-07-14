@@ -38,18 +38,23 @@
 
 
       <div v-if="loreOnly" class="border-b border-gray-600 darl:border-gray-300 pb-1">
-        <label for="lore-chapter-select" class="text-sm text-gray-600 dark:text-gray-400">
-          Lore as of chapter
-        </label>
-        <select
-          id="lore-chapter-select"
-          class="ml-2 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          @change="$emit('update:selectedChapter', ($event.target).value)"
-        >
-          <option v-for="(ch, index) in chapters" :key="ch.slug" :value="ch.slug">
-            {{ index + 1 }}. {{ ch.title }}
-          </option>
-        </select>
+        <!-- Desktop panel – inside the Lore tab area -->
+        <div v-if="activeTab === 'lore' && chapters.length > 0" class="mt-2">
+          <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <label :for="`${panelId}-lore-chapter`" class="whitespace-nowrap">Chapter</label>
+            <input
+              :id="`${panelId}-lore-chapter`"
+              type="text"
+              inputmode="numeric"
+              v-model="localChapterInput"
+              class="w-16 border border-gray-300 dark:border-gray-600 rounded-md px-1.5 py-0.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <span v-if="currentChapterTitle" class="text-xs text-gray-700 dark:text-gray-300 truncate max-w-[150px]">
+              {{ currentChapterTitle }}
+            </span>
+            <span v-else class="text-xs text-red-500">Chapter not found</span>
+          </div>
+        </div>
       </div>
 
 
@@ -218,7 +223,8 @@
           v-for="entry in lore"
           :key="entry.slug"
           @pointerdown.prevent="loreOpenHandler(`/embed-lore/${workType}/${workSlug}/${entry.slug}`)"
-          class="block w-full text-left px-2 py-1 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+          class="block w-full text-left px-2 py-1 rounded text-sm hover:bg-gray-200 dark:hover:bg-gray-700"
+          :class="entry.slug === selectedLoreSlug ? 'bg-gray-100 dark:bg-gray-800' : ''"
         >
           {{ entry.title }}
         </button>
@@ -247,7 +253,10 @@ const props = defineProps({
   nextChapter: {type: Object, default: null},
   currentSlug: { type: String, default: '' },
   loreOnly: Boolean,
+  selectedLoreSlug: { type: String, default: '' },
+  loreChapterSlug: { type: String, default: '' },
 })
+
 
 
 import { useFontSize } from '~/composables/useFontSize'
@@ -255,7 +264,7 @@ import { useExplicitPreference } from '~/composables/useExplicitPreference'
 import { watch, nextTick, ref } from 'vue'
 
 const { fontSize, setFontSize } = useFontSize()
-const emit = defineEmits(['update:modelValue', 'update:activeTab', 'update:selectedChapter', 'toggleExplicit',])
+const emit = defineEmits(['update:modelValue', 'update:activeTab', 'toggleExplicit', 'update:loreChapter'])
 
 
 const { explicitPreference, toggleExplicitPreference } = useExplicitPreference()
@@ -264,6 +273,43 @@ const hasChapters = computed(() => props.chapters?.length > 0)
 const hasLore = computed(() => props.lore?.length > 0)
 
 const isDark = ref(false)
+
+// Local input state – initialised from the prop once
+const localChapterInput = ref(props.loreChapterSlug || '')
+
+// Keep local input in sync when the parent changes the slug
+watch(() => props.loreChapterSlug, (newVal) => {
+  if (newVal !== localChapterInput.value) {
+    localChapterInput.value = newVal
+  }
+})
+
+// Find the chapter title for the currently typed slug
+const currentChapterTitle = computed(() => {
+  if (!localChapterInput.value) return ''
+  const found = props.chapters.find(ch => ch.slug === localChapterInput.value)
+  return found ? found.title : ''
+})
+
+// Emit a valid slug whenever the local input changes
+watch(localChapterInput, (val) => {
+  // Try to match the typed value as a 1‑based number first
+  const num = parseInt(val)
+  if (!isNaN(num)) {
+    const idx = num - 1
+    if (idx >= 0 && idx < props.chapters.length) {
+      emit('update:loreChapter', props.chapters[idx].slug)
+      return
+    }
+  }
+  // If not a number, try matching the raw input as a slug
+  const foundBySlug = props.chapters.find(ch => ch.slug === val)
+  if (foundBySlug) {
+    emit('update:loreChapter', foundBySlug.slug)
+  } else {
+    emit('update:loreChapter', '')   // invalid
+  }
+})
 
 // Apply theme on mount and listen to changes
 onMounted(() => {

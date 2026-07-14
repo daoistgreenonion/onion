@@ -2,8 +2,6 @@
   <div>
     <DesktopReadingPanel
       v-model="desktopPanelOpen"
-      v-model:activeTab = "activeTab" 
-      v-model:selectedChapter = "selectedChapter"
       :work-title="workTitle"
       :lore="filteredLore"
       :chapters= "chapters"
@@ -15,13 +13,12 @@
       current-title="Lore"
       activeTab="lore"
       :loreOnly="true"
-      @update:selectedChapter="(val) => selectedChapter = val"
+      @update:loreChapter="(val) => selectedChapter = val"
+      :selectedLoreSlug = "selectedLoreSlug"
     />
 
     <MobileReadingPanel
       v-model="mobileSheetOpen"
-      v-model:activeTab = "activeTab" 
-      v-model:selectedChapter = "selectedChapter"
       :work-title="workTitle"
       :lore="filteredLore"
       :chapters= "chapters"
@@ -33,10 +30,12 @@
       current-title="Lore"
       activeTab="lore"
       :loreOnly="true"
-      @update:selectedChapter="(val) => selectedChapter = val"
+      @update:loreChapter="(val) => selectedChapter = val"
+      :selectedLoreSlug = "selectedLoreSlug"
     />
 
     <main class="pt-2 sm:px-4">
+      <div>Chapters: {{ chapters?.length }}</div>
       <iframe
         v-if="iframeSrc"
         :src="iframeSrc"
