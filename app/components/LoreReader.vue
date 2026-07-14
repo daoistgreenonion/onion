@@ -70,9 +70,14 @@ const desktopPanelOpen = ref(true)
 const mobileSheetOpen = ref(false)
 const activeTab = ref('lore')
 
-// If a specific lore slug is given (direct link), pre‑select it; otherwise default to first chapter.
+const defaultLoreSlug = computed(() => {
+  if (!props.lore || props.lore.length === 0) return null
+  const mainEntry = props.lore.find(entry => entry.slug === 'main')
+  return mainEntry ? mainEntry.slug : props.lore[0].slug
+})
+
 const selectedChapter = ref(props.chapters?.[0]?.slug || '')
-const selectedLoreSlug = ref(props.initialSlug || props.lore?.[0]?.slug || null)
+const selectedLoreSlug = ref(props.initialSlug || defaultLoreSlug.value)
 
 const iframeSrc = computed(() => {
   if (!selectedLoreSlug.value) return ''

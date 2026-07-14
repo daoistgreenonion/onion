@@ -63,10 +63,12 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
   const { data } = matter(fileContent)
 
   const chapterFiles = fs.readdirSync(workDir)
-    .filter(f => f.endsWith('.md') && f !== 'meta.md')
+    .filter(f => f.endsWith('.md') && f !== 'meta.md' && f !== 'chapters.md')
     .sort()
 
-  const chapters: ChapterMeta[] = chapterFiles.map(file => {
+
+
+  let chapters: ChapterMeta[] = chapterFiles.map(file => {
     const chapPath = path.join(workDir, file)
     const chapContent = fs.readFileSync(chapPath, 'utf8')
     const { data: chapData } = matter(chapContent)
@@ -75,6 +77,35 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
       title: chapData.title || file.replace(/\.md$/, ''),
     }
   })
+
+  // If no chapter files were found, look for chapters.md (used for external‑link novels)
+  if (chapters.length === 0) {
+    const chaptersMetaPath = path.join(workDir, 'chapters.md')
+    if (fs.existsSync(chaptersMetaPath)) {
+      const rawList = fs.readFileSync(chaptersMetaPath, 'utf8')
+      const lines = rawList.split(/\r?\n/)
+      const chapterItems: ChapterMeta[] = []
+
+      for (const line of lines) {
+        const trimmed = line.trim()
+        if (!trimmed) continue
+
+        // Match a leading number, optionally followed by a title
+        const match = trimmed.match(/^(\d+)(?:\s+(.*))?$/)
+        if (match) {
+          const slug = match[1] || ""   // e.g. "1", "345"
+          const title = match[2]?.trim() || `Chapter ${slug}`
+          chapterItems.push({ slug, title })
+        }
+      }
+
+      if (chapterItems.length > 0) {
+        chapters = chapterItems
+      }
+    }
+  }
+
+  
 
   // lore
   const loreDir = path.join(workDir, 'lore')
@@ -93,6 +124,26 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
         }
       })
   }
+
+  console.log('lore_order from meta:', data.lore_order)
+  console.log('lore slugs before sort:', lore.map(e => e.slug))
+
+  // Apply custom lore order if provided in meta.md
+  if (data.lore_order && Array.isArray(data.lore_order)) {
+    const orderMap = new Map<string, number>()
+    data.lore_order.forEach((slug: string, index: number) => {
+      orderMap.set(slug, index)
+    })
+
+    lore.sort((a, b) => {
+      const orderA = orderMap.has(a.slug) ? orderMap.get(a.slug)! : Infinity
+      const orderB = orderMap.has(b.slug) ? orderMap.get(b.slug)! : Infinity
+      return orderA - orderB
+    })
+  }
+
+  console.log('lore_order from meta:', data.lore_order)
+  console.log('lore slugs after sort:', lore.map(e => e.slug))
 
   return {
     slug,

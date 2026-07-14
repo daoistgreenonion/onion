@@ -8,4 +8,11 @@ tags: ["romance", "action", "reincarnation", "adventure", "overpowered"]
 externalLink: "https://www.webnovel.com/book/26888584705619705"
 explicit: "true"
 date: "2023-07-10"
+lore_order:
+  - main
+  - wu-long
+  - harem
+  - side-characters
+  - world
+  - glossary
 ---

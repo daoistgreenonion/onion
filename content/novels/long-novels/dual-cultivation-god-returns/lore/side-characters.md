@@ -30,38 +30,3 @@ A prince of the Wood Spirit Empire
 
 [[/collapsible]]
 
-[[collapsible:Outer]]
-Visible when outer is open.
-
-[[collapsible:Inner]]
-Hidden inside outer.
-[[/collapsible]]
-
-More outer content.
-[[/collapsible]]
-
-nested mature:
-
-[[collapsible:Outer]]
-Visible when outer is open.
-
-[[explicit:Inner]]
-Hidden Explicit.
-[[/explicit]]
-
-More outer content.
-[[/collapsible]]
-
-
-The other way:
-[[explicit:Inner]]
-Visible when outer is open.
-
-[[collapsible:Outer]]
-
-Hidden Explicit.
-
-[[/collapsible]]
-More outer content.
-
-[[/explicit]]

@@ -187,14 +187,14 @@
         <!-- Chapter list -->
         <template v-if="hasChapters && activeTab === 'chapters'">
           <NuxtLink
-          v-for="ch in chapters"
+          v-for="(ch, index) in chapters"
           :key="ch.slug"
           :id="`chapter-${ch.slug}`"
           :to="`${chapterBasePath}/${ch.slug}`"
           @click="$emit('update:modelValue', false)"
           :class="['block px-2 py-1 rounded text-sm', ch.slug  === currentSlug  ? 'bg-brand-light/20 text-brand-light active-chapter' : 'hover:bg-gray-100 dark:hover:bg-gray-800']"
         >
-          {{ ch.title }}
+          {{ index + 1 }}. {{ ch.title }}
         </NuxtLink>
         </template>
 
@@ -224,8 +224,8 @@
           class="ml-2 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           @change="$emit('update:selectedChapter', ($event.target).value)"
         >
-          <option v-for="ch in chapters" :key="ch.slug" :value="ch.slug">
-            {{ ch.title }}
+          <option v-for="(ch, index) in chapters" :key="ch.slug" :value="ch.slug">
+            {{ index + 1 }}. {{ ch.title }}
           </option>
         </select>
       </div>
