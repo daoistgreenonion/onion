@@ -45,6 +45,17 @@
             <option v-for="tag in allMaintags" :key="tag" :value="tag">{{ tag }}</option>
           </select>
         </div>
+          <!-- Search -->
+        <div class="flex items-center gap-2">
+          <label for="search-desktop" class="text-sm text-gray-600 dark:text-gray-400">Search</label>
+          <input
+            id="search-desktop"
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search stories…"
+            class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
+          />
+        </div>
       </div>
   
     </div>
@@ -108,6 +119,7 @@ const router = useRouter()
 const currentSort = ref(route.query.sort || 'newest')
 const selectedMaintag = ref(route.query.maintag || 'all')
 const showControls = ref(false)
+const searchQuery = ref('')
 
 const { data: stories } = await useFetch('/api/shorts')
 
@@ -126,14 +138,28 @@ const allMaintags = computed(() => {
 })
 
 const sortedStories = computed(() => {
-  let list = filteredStories.value || []
+  let list = stories.value || []
 
-  // Filter by selected maintag
+  // 1. filter by selected genre (maintag)
   if (selectedMaintag.value !== 'all') {
     list = list.filter(s => (s.maintags || []).includes(selectedMaintag.value))
   }
 
-  // Sort
+  // 2. filter by search query (title, synopsis, tags)
+  const query = searchQuery.value.trim().toLowerCase()
+  if (query) {
+    list = list.filter(s => {
+      const fields = [
+        s.title || '',
+        s.synopsis || '',
+        ...(s.maintags || []),
+        ...(s.tags || []),
+      ]
+      return fields.some(field => field.toLowerCase().includes(query))
+    })
+  }
+
+  // 3. sort
   const sorted = [...list]
   if (currentSort.value === 'oldest') {
     sorted.sort((a, b) => (a.date ? new Date(a.date).getTime() : 0) - (b.date ? new Date(b.date).getTime() : 0))

@@ -84,6 +84,11 @@ const iframeSrc = computed(() => {
   const params = new URLSearchParams()
   if (selectedChapter.value) params.set('chapter', selectedChapter.value)
   if (explicitPreference.value) params.set('explicit', explicitPreference.value)
+  // Add theme
+  if (typeof document !== 'undefined') {
+    const dark = document.documentElement.classList.contains('dark')
+    params.set('theme', dark ? 'dark' : 'light')
+  }
   let url = `/embed-lore/${props.workType}/${props.workSlug}/${selectedLoreSlug.value}`
   const qs = params.toString()
   if (qs) url += `?${qs}`

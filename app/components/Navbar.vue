@@ -7,7 +7,7 @@
       ? isAtTop
         ? 'bg-transparent border-transparent'
         : 'bg-white/90 dark:bg-dark/80 backdrop-blur-sm border-gray-200 dark:border-gray-700'
-      : 'bg-white/90 dark:bg-dark/90 border-gray-200 dark:border-gray-700'
+      : 'bg-white/90 dark:bg-dark/90 backdrop-blur-sm border-gray-200 dark:border-gray-700'
   "
 >
     <nav class="px-4 flex items-center justify-between transition-all" :class= "readingPage  ? 'h-10' : 'py-1', lorePage ? 'max-w-none' : 'max-w-5xl mx-auto'">

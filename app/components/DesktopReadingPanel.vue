@@ -21,6 +21,7 @@
       <div class="p-4 h-full flex flex-col">
         <div class="absolute top-2 right-2">
           <button
+          v-if="!loreOnly"
             @pointerdown.prevent="$emit('update:modelValue', false)"
             class="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
             aria-label="Close panel"
@@ -70,8 +71,12 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'update:loreChapter'])
 
 const hasChapters = computed(() => props.chapters.length > 0)
-const hasLore = computed(() => props.lore.length > 0)
 const skipTargets = computed(() => props.skipTargets || [])
+
+const loreSafe = computed(() => props.lore || [])
+const hasLore = computed(() => loreSafe.value.length > 0)
+
+
 
 const coreProps = computed(() => ({
   workTitle: props.workTitle,

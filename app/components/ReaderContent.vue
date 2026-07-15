@@ -255,14 +255,29 @@ function onLoreMessage(event) {
   }
 }
 
+// Smooth scroll skip targets to center
+function onSkipClick(event) {
+  const link = event.target.closest('a[href^="#"]')
+  if (!link) return
+  const id = link.getAttribute('href')?.slice(1)
+  if (!id) return
+  const target = document.getElementById(id)
+  if (target) {
+    event.preventDefault()
+    target.scrollIntoView({ block: 'center', behavior: 'instant' })
+  }
+}
+
 onMounted(() => {
   window.addEventListener('message', onLoreMessage)
   window.addEventListener('keydown', onKeyDown)
+  document.addEventListener('click', onSkipClick)
 })
 
 onUnmounted(() => {
   window.removeEventListener('message', onLoreMessage)
   window.removeEventListener('keydown', onKeyDown)
+  document.removeEventListener('click', onSkipClick)
 })
 
 function goBackLore() {

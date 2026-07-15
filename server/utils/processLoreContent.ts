@@ -212,17 +212,16 @@ export function processCollapsibleAndExplicitLore(html: string, explicitPref: st
       }
 
       const blockHtml = `<div class="collapsible-section ${sectionClass} ${initiallyOpen ? 'open' : ''} border border-gray-200 dark:border-gray-700 rounded-lg my-4">
-        <button class="collapsible-toggle flex items-start gap-2 text-lg font-semibold text-brand-lightest w-full hover:bg-gray-200/50 dark:hover:bg-gray-600/50 p-4"
+        <button class="collapsible-toggle flex items-start justify-between gap-2 text-lg font-semibold text-brand-lightest w-full hover:bg-gray-200/50 dark:hover:bg-gray-600/50 p-4"
                 aria-expanded="${initiallyOpen ? 'true' : 'false'}"
                 onclick="const section=this.closest('.collapsible-section');section.classList.toggle('open');this.setAttribute('aria-expanded',section.classList.contains('open'))">
-
-          ${iconHtml} 
           <div class="text-start">
             <p class="text-md sm:text-lg text-brand dark:text-brand-lightest !m-0">
               ${safeTitle}
             </p>
             <p class="text-sm text-gray-500 !m-0">${initiallyOpen ? '(Expanded, click to collapse)' : '(Collapsed, click to expand)'}</p>
           </div>
+          ${iconHtml} 
         </button>
         <div class="collapsible-content p-2 pt-0 hidden !m-0">
           ${entry.buffer}

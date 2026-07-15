@@ -18,7 +18,8 @@ function parseAltText(text:string) : {layout:string; caption:string;} {
   const firstWord = parts[0]?.toLowerCase()
 
   if (firstWord === 'left' || firstWord === 'right' || firstWord === 'full' ||
-      firstWord === 'leftbig' || firstWord === 'rightbig' || firstWord === 'center' || firstWord === 'centersmall') {
+      firstWord === 'leftbig' || firstWord === 'rightbig' || firstWord === 'center' || 
+      firstWord === 'centersmall' || firstWord === 'loreleft') {
     return {
       layout: firstWord,
       caption: parts.slice(1).join(' '),
@@ -64,20 +65,22 @@ export function createMarkdownItInstance() {
       ? `<a href="${sourceUrl}" target="_blank" rel="noopener noreferrer" class="block text-xs text-center text-gray-500 dark:text-gray-400 mt-1 hover:underline">Source (external link)</a>`
       : ''
 
-    let wrapperClass = 'illustration w-full my-4'
+    let wrapperClass = 'illustration w-full'
 
     if (layout === 'left') {
-      wrapperClass += ' sm:float-left sm:mr-4 sm:mb-2 sm:w-1/3 lg:w-1/4'
+      wrapperClass += ' my-4 sm:float-left sm:mr-4 sm:mb-2 sm:w-1/3 lg:w-1/4'
     } else if (layout === 'right') {
-      wrapperClass += ' sm:float-right sm:ml-4 sm:mb-2 sm:w-1/3 lg:w-1/4'
+      wrapperClass += ' my-4 sm:float-right sm:ml-4 sm:mb-2 sm:w-1/3 lg:w-1/4'
     } else if (layout === 'leftbig') {
-      wrapperClass += ' sm:float-left sm:mr-4 sm:mb-2 sm:w-1/2'
+      wrapperClass += ' my-4 sm:float-left sm:mr-4 sm:mb-2 sm:w-1/2'
     } else if (layout === 'rightbig') {
-      wrapperClass += ' sm:float-right sm:ml-4 sm:mb-2 sm:w-1/2'
+      wrapperClass += ' my-4 sm:float-right sm:ml-4 sm:mb-2 sm:w-1/2'
     } else if (layout === 'center') {
-      wrapperClass += ' sm:w-2/3 sm:mx-auto sm:block sm:clear-both'
+      wrapperClass += ' my-4 sm:w-2/3 sm:mx-auto sm:block sm:clear-both'
     } else if (layout === 'centersmall') {
-      wrapperClass += ' sm:w-1/2 sm:mx-auto sm:block sm:clear-both'
+      wrapperClass += ' my-4 sm:w-1/2 sm:mx-auto sm:block sm:clear-both'
+    } else if (layout === 'loreleft') {
+      wrapperClass += ' loreleft sm:float-left sm:mr-4 sm:mb-1 sm:w-1/2'
     } else {
       wrapperClass += ' clear-both'   // full
     }

@@ -1,27 +1,27 @@
 <template>
-  <div v-if="lore" class="max-w-3xl mx-auto h-full">
+  <div v-if="lore" class="sm:max-w-[60%] lg:max-w-3xl h-full">
     <!-- Search toggle & input (only if searchable) -->
-    <div v-if="lore.searchable" class="relative">
+    <div v-if="lore.searchable" class="relative flex items-center">
       <!-- Search icon button (mobile: absolute; desktop: inline) -->
-      <button
+      <!-- <button
         @click="showSearch = !showSearch"
-        class="absolute top-2 right-2 sm:static sm:ml-auto p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        class="sm:static sm:ml-auto p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         :aria-label="showSearch ? 'Close search' : 'Open search'"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </button>
+      </button> -->
+      <svg class="w-5 h-5 m-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
 
       <!-- Search input (shown/hidden) -->
       <transition name="fade">
-        <div v-if="showSearch" class="mt-2 sm:mt-0 sm:ml-2">
+        <div class="w-full">
           <input
             id="lore-search-input"
             v-model="searchTerm"
             type="text"
             :placeholder="`Search by ${lore.searchMode || 'title'}…`"
-            class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand"
             @input="onSearchInput"
           />
         </div>
@@ -52,6 +52,7 @@ const route = useRoute()
 const { workType, slug, loreSlug } = route.params
 const chapterSlug = route.query.chapter || ''
 const explicitPref = route.query.explicit || 'collapsed'
+
 
 const params = new URLSearchParams()
 if (chapterSlug) params.set('chapter', chapterSlug)

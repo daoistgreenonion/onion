@@ -1,5 +1,5 @@
 <template>
-  <div v-if="chapters.length > 0" class="mt-2">
+  <div v-if="chapters.length > 0" class="">
     <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
       <label for="lore-chapter-input" class="whitespace-nowrap">Chapter</label>
       <input

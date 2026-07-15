@@ -1,11 +1,11 @@
 ---
 title: "Side Characters"
 searchable: true
-search_mode: "title" 
+search_mode: "name" 
 ---
 
 
-[[collapsible:♂️Elder Hai]]
+[[collapsible:♂️ Elder Hai]]
 
 An elder of the Yin Yang Unity Palace who is known for bringing Wu Long to the sect and taking care of him.
 
@@ -17,7 +17,7 @@ An elder of the Yin Yang Unity Palace who is known for bringing Wu Long to the s
 
 
 
-[[collapsible:♂️Chu Ren]]
+[[collapsible:♂️ Chu Ren]]
 
 The elder man who was beside Song Lingfei.
 
@@ -30,7 +30,7 @@ Revealed to be Crown Prince Song Minfu's right hand man.
 [[lock_from 25]]
 
 
-[[collapsible: ♂️Xia Jung, ♀️Lei Ding]]
+[[collapsible: ♂️ Xia Jung, ♀️ Lei Ding]]
 
 A young couple met in the town before the Storm Pass. 
 
@@ -40,7 +40,7 @@ A young couple met in the town before the Storm Pass.
 
 
 
-[[collapsible: ♂️Sui Zhang  ,  ♂️Sui Mun  ,  ♂️Sui Feng]]
+[[collapsible: ♂️ Sui Zhang  ,  ♂️ Sui Mun  ,  ♂️ Sui Feng]]
 
 From eldest to youngest of Sui Luxiao's sons.
 

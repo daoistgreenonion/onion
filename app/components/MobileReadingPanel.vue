@@ -73,7 +73,8 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'update:loreChapter'])
 
-const hasContent = computed(() => props.chapters.length > 0 || props.lore.length > 0 || props.skipTargets.length > 0)
+const loreSafe = computed(() => props.lore || [])
+const hasContent = computed(() => props.chapters.length > 0 || loreSafe.value.length > 0 || props.skipTargets.length > 0)
 
 const coreProps = computed(() => ({
   workTitle: props.workTitle,

@@ -6,15 +6,14 @@
         v-if="backLink"
         :to="backLink"
         class="text-brand dark:text-brand-lightest hover:underline inline-block"
-        :class="loreOnly ? 'mb-6' : 'mb-0'"
+        :class="loreOnly ? 'mb-2' : 'mb-0'"
         @click="$emit('close')"
       >
         <h2 class="font-semibold text-lg truncate">{{ workTitle }}</h2>
       </NuxtLink>
     </div>
 
-    
-
+    <div v-if="loreOnly" class=" hidden sm:flex items-center py-2 border-t border-gray-600 dark:border-gray-400 mb-2"></div>
 
     <ChapterNavigation
       v-if="!loreOnly && showNavigation"
@@ -118,14 +117,15 @@
       </a>
     </div>
 
-
     <!-- Lore chapter input -->
-    <LoreChapterInput
-      v-if="loreOnly && chapters.length > 0"
-      :chapters="chapters"
-      :model-value="loreChapterSlug"
-      @update:model-value="(val) => $emit('update:loreChapter', val)"
-    />
+    <div v-if="loreOnly && chapters.length > 0" class="flex items-center py-2 border-t border-b border-gray-600 dark:border-gray-400 sm:mb-20 lg:mb-0">
+      <LoreChapterInput
+        v-if="loreOnly && chapters.length > 0"
+        :chapters="chapters"
+        :model-value="loreChapterSlug"
+        @update:model-value="(val) => $emit('update:loreChapter', val)"
+      />
+    </div>
   </div>
 </template>
 
@@ -169,7 +169,8 @@ const emit = defineEmits([
 const activeTab = ref('settings')
 
 const hasChapters = computed(() => props.chapters.length > 0)
-const hasLore = computed(() => props.lore.length > 0)
+const loreSafe = computed(() => props.lore || [])
+const hasLore = computed(() => loreSafe.value.length > 0)
 
 // Tab definitions – automatically include only available tabs
 const tabs = computed(() => {
@@ -205,6 +206,7 @@ const currentChapterIndex = computed(() => {
 
 const isLoreUnlocked = (entry) => {
   if (!entry.loreChapter) return true
+  if (!props.loreChapterSlug) return false
   const requiredNum = getChapterNum(entry.loreChapter)
   if (requiredNum === null) return false
   return requiredNum - 1 <= currentChapterIndex.value
