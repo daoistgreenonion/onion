@@ -6,6 +6,8 @@ export interface ChapterMeta {
   slug: string
   title: string
   loreChapter?: string   // the slug of the chapter that unlocks this lore
+  lockedMessage?: boolean
+  explicit?: boolean   // ← new
 }
 
 export type WorkType = 'long-novel' | 'short-novel' | 'anthology' | 'short-story'
@@ -121,6 +123,7 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
           slug: f.replace(/\.md$/, ''),
           title: lData.title || f.replace(/\.md$/, ''),
           loreChapter: lData.chapter || undefined,   // ← new field
+          explicit: lData.explicit ?? false,
         }
       })
   }
@@ -352,7 +355,7 @@ export function getLoreContent(workDir: string, loreSlug: string) {
   const fileContent = fs.readFileSync(lorePath, 'utf8')
   const { data, content } = matter(fileContent)
   return { title: data.title || loreSlug, content, searchable: data.searchable ?? false,
-  searchMode: data.search_mode || 'title',  }
+  searchMode: data.search_mode || 'title', explicit: data.explicit ?? false, }
 }
 
 export function getLoreContentBySlug(workDir: string, loreSlug: string): string | null {

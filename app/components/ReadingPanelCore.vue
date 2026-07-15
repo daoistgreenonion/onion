@@ -77,7 +77,7 @@
       v-if="(activeTab === 'lore' || loreOnly) && hasLore"
       class="flex-1 overflow-y-auto space-y-1 max-h-[50vh] min-h-[50vh] sm:max-h-none sm:min-h-none"
     >
-      <div v-for="entry in lore" :key="entry.slug">
+      <div v-for="entry in filteredLore" :key="entry.slug">
         <!-- Unlocked lore entry -->
         <button
           v-if="isLoreUnlocked(entry)"
@@ -209,6 +209,15 @@ const isLoreUnlocked = (entry) => {
   if (requiredNum === null) return false
   return requiredNum - 1 <= currentChapterIndex.value
 }
+
+const filteredLore = computed(() => {
+  if (!props.lore) return []
+  return props.lore.filter(entry => {
+    if (entry.explicit && explicitPreference.value !== 'expanded') return false
+    // also respect chapter locking (already handled by isLoreUnlocked, but we keep both)
+    return true
+  })
+})
 
 // Scroll to active chapter when panel opens on chapters tab
 const chapterListRef = ref(null)

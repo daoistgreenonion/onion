@@ -232,10 +232,10 @@ watch(loreOpen, (isOpen) => {
 
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const loreHistory = ref<string[]>([])
+const loreHistory = ref([])
 
-function onLoreMessage(event: MessageEvent) {
-  if (event.data?.type === 'navigate-lore' && event.data.loreSlug) {
+function onLoreMessage(event) {
+  if (event.data && event.data.type === 'navigate-lore' && event.data.loreSlug) {
     const workType = props.workType || 'novels'
     const workSlug = props.workSlug || ''
     const params = new URLSearchParams({
@@ -244,7 +244,7 @@ function onLoreMessage(event: MessageEvent) {
     })
     if (event.data.loreSlug === ':back:') {
       if (loreHistory.value.length > 0) {
-        const prevUrl = loreHistory.value.pop()!
+        const prevUrl = loreHistory.value.pop()
         loreUrl.value = prevUrl
       }
     } else {
@@ -260,13 +260,14 @@ function onLoreMessage(event: MessageEvent) {
 onMounted(() => {
   window.addEventListener('message', onLoreMessage)
 })
+
 onUnmounted(() => {
   window.removeEventListener('message', onLoreMessage)
 })
 
 function goBackLore() {
   if (loreHistory.value.length > 0) {
-    const prevUrl = loreHistory.value.pop()!
+    const prevUrl = loreHistory.value.pop()
     loreUrl.value = prevUrl
   }
 }

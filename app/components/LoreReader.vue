@@ -133,10 +133,21 @@ onUnmounted(() => {
 const filteredLore = computed(() => {
   if (!props.lore) return []
   return props.lore.filter(entry => {
-    if (!entry.loreChapter) return true
-    const reqIndex = props.chapters.findIndex(ch => ch.slug === entry.loreChapter)
-    const curIndex = props.chapters.findIndex(ch => ch.slug === selectedChapter.value)
-    return reqIndex !== -1 && reqIndex <= curIndex
+    // existing chapter filter
+    if (selectedChapter.value) {
+      const chapterNum = parseInt(selectedChapter.value)
+      if (!isNaN(chapterNum)) {
+        if (entry.loreChapter) {
+          const reqNum = parseInt(entry.loreChapter)
+          if (!isNaN(reqNum) && reqNum > chapterNum) return false
+        }
+      }
+    } else {
+      if (entry.loreChapter) return false
+    }
+    // explicit filter
+    if (entry.explicit && explicitPreference.value !== 'expanded') return false
+    return true
   })
 })
 
