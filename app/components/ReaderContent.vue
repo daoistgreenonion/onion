@@ -91,15 +91,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-// ---- explicit content global preference ----
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useExplicitPreference } from '~/composables/useExplicitPreference'
-
-import MarkdownIt from 'markdown-it'
 import Collapsible from '~/components/Collapsible.vue'
-
 import { createMarkdownItInstance } from '~/utils/markdownRenderer'
 const md = createMarkdownItInstance()
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 
 const explicitPreference = useExplicitPreference().explicitPreference
@@ -206,7 +205,7 @@ const contentParts = computed(() => {
   return parts
 })
 
-import { watch } from 'vue'
+
 
 // Lock background when lore overlay is open on mobile
 watch(loreOpen, (isOpen) => {
@@ -230,7 +229,6 @@ watch(loreOpen, (isOpen) => {
 })
 
 
-import { ref, onMounted, onUnmounted } from 'vue'
 
 const loreHistory = ref([])
 
@@ -259,16 +257,33 @@ function onLoreMessage(event) {
 
 onMounted(() => {
   window.addEventListener('message', onLoreMessage)
+  window.addEventListener('keydown', onKeyDown)
 })
 
 onUnmounted(() => {
   window.removeEventListener('message', onLoreMessage)
+  window.removeEventListener('keydown', onKeyDown)
 })
 
 function goBackLore() {
   if (loreHistory.value.length > 0) {
     const prevUrl = loreHistory.value.pop()
     loreUrl.value = prevUrl
+  }
+}
+
+function onKeyDown(event) {
+  // Ignore if the user is typing in an input, textarea, or contenteditable element
+  const tag = event.target.tagName
+  const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || event.target.isContentEditable
+  if (isEditable) return
+
+  if (event.key === 'ArrowLeft' && prevChapter.value) {
+    event.preventDefault()
+    router.push(`${props.chapterBasePath}/${prevChapter.value.slug}`)
+  } else if (event.key === 'ArrowRight' && nextChapter.value) {
+    event.preventDefault()
+    router.push(`${props.chapterBasePath}/${nextChapter.value.slug}`)
   }
 }
 
