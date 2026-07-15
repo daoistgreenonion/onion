@@ -1,7 +1,6 @@
 <template>
   <DesktopReadingPanel
     v-model="desktopPanelOpen"
-    v-model:active-tab="activeTab"
     :work-title="workTitle"
     :current-title="currentTitle"
     :chapters="chapters"
@@ -17,11 +16,11 @@
     :nextChapter="nextChapter"
     :current-slug="currentSlug"
     :selectedLoreSlug = "selectedLoreSlug"
+    :lore-chapter-slug="currentSlug"
   />
     
     <MobileReadingPanel
     v-model="mobileSheetOpen"
-    v-model:active-tab="activeTab"
     :work-title="workTitle"
     :current-title="currentTitle"
     :chapters="chapters"
@@ -37,6 +36,7 @@
     :nextChapter="nextChapter"
     :current-slug="currentSlug"
     :selectedLoreSlug = "selectedLoreSlug"
+    :lore-chapter-slug="currentSlug"
   />
 
   <main class="max-w-2xl lg:max-w-[50%] 2xl:max-w-3xl mx-auto px-4">
@@ -121,7 +121,6 @@ const props = defineProps({
 // State
 const desktopPanelOpen = ref(false)
 const mobileSheetOpen = ref(false)
-const activeTab = ref('settings')
 const loreOpen = ref(false)
 const loreUrl = ref(null)
 

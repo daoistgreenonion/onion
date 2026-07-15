@@ -2,31 +2,54 @@
 title:  "Side Characters"
 ---
 
-[[collapsible:Boundless Mortal World]]
-Side Characters met in the Boundless Mortal World
 
-[[collapsible:Azure Eagle Continent]]
-Side Characters met on the Azure Eagle Continent
+[[collapsible:♂️Elder Hai]]
 
-[[collapsible:Song Minfu]]
-The crown prince of the Azure Eagle Empire
-
-
-[[/collapsible]]
-
-[[/collapsible]]
-
-[[collapsible:Wood Spirit Continent]]
-Side Characters met on the Wood Spirit Continent
-
-[[collapsible:Nie Guanting]]
-A prince of the Wood Spirit Empire
-
+An elder of the Yin Yang Unity Palace who is known for bringing Wu Long to the sect and taking care of him.
 
 [[/collapsible]]
 
 
-[[/collapsible]]
+<!-- ******************** First LOck at chapter 16 ******************* -->
+[[lock 16]]
+
+1
+
+[[/lock]]
+
+[[collapsible:♂️Chu Ren]]
+
+The elder man who was beside Song Lingfei.
+
+Revealed to be Crown Prince Song Minfu's right hand man.
 
 [[/collapsible]]
+
+
+
+[[collapsible: ♂️Xia Jung, ♀️Lei Ding]]
+
+A young couple met in the town before the Storm Pass. 
+
+[[/collapsible]]
+
+
+
+[[collapsible: ♂️Sui Zhang  ,  ♂️Sui Mun  ,  ♂️Sui Feng]]
+
+From eldest to youngest of Sui Luxiao's sons.
+
+[[/collapsible]]
+
+
+
+
+[[collapsible:♂️ Song Minfu]]
+
+The Crown Prince of the Azure Eagle Empire. 
+
+Song Lingfei's 
+
+[[/collapsible]]
+
 

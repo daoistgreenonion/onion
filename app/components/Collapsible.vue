@@ -1,11 +1,11 @@
 <template>
   <div
-    class="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+    class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
     :class="{ 'open': expanded, 'explicit-section': type === 'explicit' }"
   >
     <button
       @click="expanded = !expanded"
-      class="flex items-center gap-2 text-lg font-semibold text-brand-lightest hover:underline"
+      class="flex items-start gap-2 font-semibold text-brand dark:text-brand-lightest w-full hover:bg-gray-200/50 dark:hover:bg-gray-600/50 p-4"
       :aria-expanded="expanded"
     >
       <!-- Regular collapsible icon (+/−) -->
@@ -25,10 +25,15 @@
         </span>
       </template>
 
-      {{ title }}
+      <div class="text-start">
+        <p class="text-md sm:text-lg text-brand dark:text-brand-lightest !m-0">
+          {{ title }}
+        </p>
+        <p class="text-sm text-gray-500 !m-0">{{ expanded ? '(Expanded, click to collapse)' : '(Collapsed, click to expand)' }}</p>
+      </div>
     </button>
 
-    <div v-if="expanded" class="mt-4">
+    <div v-if="expanded" class="px-2">
       <slot />
     </div>
   </div>

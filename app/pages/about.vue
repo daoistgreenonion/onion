@@ -4,15 +4,13 @@
       About...
     </h1>
 
-    <div class="prose prose-gray dark:prose-invert max-w-none space-y-6">
-      <div class="p-6 sm:p-12">
-        <p>
-          Welcome to my website! I'm DaoistGreenOnion. This is where I share my stories, novels, and worlds with you. 
-        </p>
-        <p>
-          When making the site, I tried to include a few simple features that I believe to be helpful for good reading experience, I will include an explanation for them on this page first:
-        </p>
-      </div>
+    <div class="prose prose-gray dark:prose-invert max-w-none space-y-4">
+      <p>
+        Welcome to my website! I'm DaoistGreenOnion. This is where I share my stories, novels, and worlds with you. 
+      </p>
+      <p>
+        When making the site, I tried to include a few simple features that I believe to be helpful for good reading experience, I will include an explanation for them on this page first:
+      </p>
       <Collapsible title="...Explicit Content Access and Visibility" :open="true">
         <div>
           <p>
@@ -107,14 +105,12 @@
         </div>
       </Collapsible>
 
-      <div class="p-6 sm:p-12">
-        <p>
-          We're done with going over the functions for now, perhaps later there will be more there. 
-        </p>
-        <p>
-          lol, after those collapsible sections above, this text might feel like the unskippable dialogue or cut scene in a game hahaha. Anyway, there's still a few things I wanted to go over on this page.
-        </p>
-      </div>
+      <p>
+        We're done with going over the functions for now, perhaps later there will be more there. 
+      </p>
+      <p>
+        lol, after those collapsible sections above, this text might feel like the unskippable dialogue or cut scene in a game hahaha. Anyway, there's still a few things I wanted to go over on this page.
+      </p>
       
       <Collapsible title="...Why I built this Website" :open="true">
         <div>

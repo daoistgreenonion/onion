@@ -11,10 +11,10 @@
       :back-link="backLink"
       chapter-base-path=""
       current-title="Lore"
-      activeTab="lore"
       :loreOnly="true"
       @update:loreChapter="(val) => selectedChapter = val"
       :selectedLoreSlug = "selectedLoreSlug"
+      :lore-chapter-slug="selectedChapter"
     />
 
     <MobileReadingPanel
@@ -28,14 +28,13 @@
       :back-link="backLink"
       chapter-base-path=""
       current-title="Lore"
-      activeTab="lore"
       :loreOnly="true"
       @update:loreChapter="(val) => selectedChapter = val"
       :selectedLoreSlug = "selectedLoreSlug"
+      :lore-chapter-slug="selectedChapter"
     />
 
-    <main class="pt-2 sm:px-4">
-      <div>Chapters: {{ chapters?.length }}</div>
+    <main class="pt-2 px-0 sm:px-4">
       <iframe
         v-if="iframeSrc"
         :src="iframeSrc"
@@ -67,7 +66,6 @@ const props = defineProps({
 
 const desktopPanelOpen = ref(true)
 const mobileSheetOpen = ref(false)
-const activeTab = ref('lore')
 
 const defaultLoreSlug = computed(() => {
   if (!props.lore || props.lore.length === 0) return null
@@ -75,7 +73,7 @@ const defaultLoreSlug = computed(() => {
   return mainEntry ? mainEntry.slug : props.lore[0].slug
 })
 
-const selectedChapter = ref(props.chapters?.[0]?.slug || '')
+const selectedChapter = ref('')   // was props.chapters?.[0]?.slug || ''
 const selectedLoreSlug = ref(props.initialSlug || defaultLoreSlug.value)
 
 const iframeSrc = computed(() => {

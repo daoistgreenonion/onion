@@ -1,7 +1,7 @@
 <template>
   <div v-if="lore" class="max-w-none sm:max-w-[70%] lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl w-full h-full">
     <div class="h-full overflow-y-auto" dir="rtl">
-      <div dir="ltr" class="p-6 sm:p-10 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
+      <div dir="ltr" class="p-4 sm:p-6 sm:p-10 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
         <article class="prose prose-lg dark:prose-invert max-w-none">
           <h1 class="text-3xl font-bold mb-6 text-brand-lightest">{{ lore.title }}</h1>
           <div v-html="lore?.content"></div>

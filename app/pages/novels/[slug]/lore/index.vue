@@ -1,5 +1,5 @@
 <template>
-  <main class="px-4">
+  <main class="">
     <LoreReader
       v-if="novel && novel.lore?.length"
       :work-title="novel.title"

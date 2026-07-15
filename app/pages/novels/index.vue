@@ -12,7 +12,6 @@
 
     <!-- Long Novels -->
     <section v-if="longNovels.length" class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Novels</h2>
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <WorkCard
           v-for="novel in longNovels"

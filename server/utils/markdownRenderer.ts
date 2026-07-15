@@ -18,7 +18,7 @@ function parseAltText(text:string) : {layout:string; caption:string;} {
   const firstWord = parts[0]?.toLowerCase()
 
   if (firstWord === 'left' || firstWord === 'right' || firstWord === 'full' ||
-      firstWord === 'leftbig' || firstWord === 'rightbig' || firstWord === 'center') {
+      firstWord === 'leftbig' || firstWord === 'rightbig' || firstWord === 'center' || firstWord === 'centersmall') {
     return {
       layout: firstWord,
       caption: parts.slice(1).join(' '),
@@ -76,6 +76,8 @@ export function createMarkdownItInstance() {
       wrapperClass += ' sm:float-right sm:ml-4 sm:mb-2 sm:w-1/2'
     } else if (layout === 'center') {
       wrapperClass += ' sm:w-2/3 sm:mx-auto sm:block sm:clear-both'
+    } else if (layout === 'centersmall') {
+      wrapperClass += ' sm:w-1/2 sm:mx-auto sm:block sm:clear-both'
     } else {
       wrapperClass += ' clear-both'   // full
     }

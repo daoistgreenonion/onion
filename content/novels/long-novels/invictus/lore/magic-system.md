@@ -5,13 +5,13 @@ title: The Magic System
 
 Magic is everywhere.
 
-[[lock chapter-0005]]
+[[lock 5]]
 But only after chapter 5 do you learn about elemental magic.
 [[/lock]]
 
 Mages are rare in this world.
 
-[[lock chapter-0003]]
+[[lock 3]]
 But in chapter 5 you learn that might not be true.
 [[/lock]]
 

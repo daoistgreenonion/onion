@@ -67,6 +67,10 @@
 .collapsible-content.hidden {
   display: none;
 }
+/* Always hide collapsible content by default (Tailwind 'hidden' sets display: none) */
+.collapsible-content > p {
+  margin: 0 !important;
+}
 /* Show content when the section has the 'open' class */
 .collapsible-section.open > .collapsible-content {
   display: block !important;

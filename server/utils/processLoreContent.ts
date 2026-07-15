@@ -6,71 +6,59 @@
  *   345         → 345
  *   chapter-0345 → 345
  */
-function getChapterNumber(raw: string): number | null {
-  const trimmed = raw.trim()
-  // Try matching full slug "chapter-XXXX"
+// function getChapterNumber(raw: string): number | null {
+//   const trimmed = raw.trim()
+//   // Try matching full slug "chapter-XXXX"
   
-  const slugMatch = trimmed.match(/^chapter-(\d+)$/i)
-  if (slugMatch) {
-    return parseInt(slugMatch[1] ?? '0', 10)
-  }
-  // Try matching a plain number
-  const numMatch = trimmed.match(/^\d+$/)
-  if (numMatch) {
-    return parseInt(numMatch[1] ?? '0', 10)
-  }
-  return null
-}
+//   const slugMatch = trimmed.match(/^chapter-(\d+)$/i)
+//   if (slugMatch) {
+//     return parseInt(slugMatch[1] ?? '0', 10)
+//   }
+//   // Try matching a plain number
+//   const numMatch = trimmed.match(/^\d+$/)
+//   if (numMatch) {
+//     return parseInt(numMatch[1] ?? '0', 10)
+//   }
+//   return null
+// }
 
 /**
  * Find the index of a chapter by its numeric ID.
  */
-function findChapterIndex(chapters: { slug: string }[], num: number): number {
-  return chapters.findIndex(ch => getChapterNumber(ch.slug) === num)
-}
+// function findChapterIndex(chapters: { slug: string }[], num: number): number {
+//   return chapters.findIndex(ch => getChapterNumber(ch.slug) === num)
+// }
 
 export function processLoreContent(
   rawContent: string,
-  chapters: { slug: string }[],
-  currentChapterSlug: string
+  totalChapters: number,
+  currentChapterIndex: number
 ): string {
-  if (!chapters.length) return rawContent
-
-  const currentNumber = getChapterNumber(currentChapterSlug)
-  const currentIndex = currentNumber !== null
-    ? findChapterIndex(chapters, currentNumber)
-    : -1
+  if (totalChapters === 0) return rawContent
 
   const lines = rawContent.split('\n')
   const resultLines: string[] = []
 
-  // Stack of active sunsets – each entry is the sunset chapter number
   const sunsetStack: number[] = []
   let skippingBecauseSunset = false
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
+    // Guard against undefined (should never happen, but satisfies strict TS)
     if (line === undefined) continue
 
     // ---------- SUNSET START ----------
-    const sunsetStart = line.trim().match(/^\[\[sunset\s+(.+?)\]\]\s*$/)
+    const sunsetStart = line.trim().match(/^\[\[sunset\s+(\d+)\]\]\s*$/)
     if (sunsetStart) {
-      const sunsetNum = getChapterNumber(sunsetStart[1] ?? '')
-      if (sunsetNum === null) continue // invalid marker, treat as plain text
+      // TypeScript knows sunsetStart is not null here, but capture group could be undefined
+      const sunsetChapter = parseInt(sunsetStart[1] ?? '0', 10)
+      const sunsetIndex = sunsetChapter - 1
 
-      const sunsetIndex = findChapterIndex(chapters, sunsetNum)
-      if (sunsetIndex === -1) {
-        // Chapter not found – treat as always visible, just skip marker
-        continue
-      }
-
-      if (currentIndex !== -1 && currentIndex >= sunsetIndex) {
-        // Current chapter is at or past sunset → expire content
-        sunsetStack.push(sunsetNum)
+      if (currentChapterIndex >= sunsetIndex) {
+        sunsetStack.push(sunsetIndex)
         skippingBecauseSunset = true
       } else {
-        // Still before sunset → content visible, push stack entry
-        sunsetStack.push(sunsetNum)
+        sunsetStack.push(sunsetIndex)
       }
       continue
     }
@@ -87,14 +75,11 @@ export function processLoreContent(
     }
 
     // ---------- LOCK START ----------
-    const lockStart = line.trim().match(/^\[\[lock\s+(.+?)\]\]\s*$/)
+    const lockStart = line.trim().match(/^\[\[lock\s+(\d+)\]\]\s*$/)
     if (lockStart) {
-      const lockNum   = getChapterNumber(lockStart[1] ?? '')
-      if (lockNum === null) continue
+      const lockChapter = parseInt(lockStart[1] ?? '0', 10)
+      const lockIndex = lockChapter - 1
 
-      const lockIndex = findChapterIndex(chapters, lockNum)
-
-      // Find matching [[/lock]]
       let lockEnd = -1
       for (let j = i + 1; j < lines.length; j++) {
         if (lines[j]?.trim() === '[[/lock]]') {
@@ -103,8 +88,7 @@ export function processLoreContent(
         }
       }
 
-      if (lockIndex === -1 || currentIndex < lockIndex) {
-        // Locked – skip until [[/lock]] or EOF
+      if (currentChapterIndex < lockIndex) {
         if (lockEnd !== -1) {
           i = lockEnd
         } else {
@@ -112,15 +96,13 @@ export function processLoreContent(
         }
         continue
       } else {
-        // Unlocked – include content, skip markers
         i++ // skip start marker
         while (i < lines.length && lines[i]?.trim() !== '[[/lock]]') {
-          if (!skippingBecauseSunset) {
+          if (!skippingBecauseSunset && lines[i] !== undefined) {
             resultLines.push(lines[i]!)
           }
           i++
         }
-        // Now i is at [[/lock]] or EOF – loop will ++ past it
         continue
       }
     }
@@ -219,13 +201,20 @@ export function processCollapsibleAndExplicitLore(html: string, explicitPref: st
         iconHtml = `<span class="collapsible-icon">${initiallyOpen ? '−' : '+'}</span>`
       }
 
-      const blockHtml = `<div class="collapsible-section ${sectionClass} ${initiallyOpen ? 'open' : ''} border border-gray-200 dark:border-gray-700 rounded-lg p-4 my-4">
-        <button class="collapsible-toggle flex items-center gap-2 text-lg font-semibold text-brand-lightest hover:underline"
+      const blockHtml = `<div class="collapsible-section ${sectionClass} ${initiallyOpen ? 'open' : ''} border border-gray-200 dark:border-gray-700 rounded-lg my-4">
+        <button class="collapsible-toggle flex items-start gap-2 text-lg font-semibold text-brand-lightest w-full hover:bg-gray-200/50 dark:hover:bg-gray-600/50 p-4"
                 aria-expanded="${initiallyOpen ? 'true' : 'false'}"
                 onclick="const section=this.closest('.collapsible-section');section.classList.toggle('open');this.setAttribute('aria-expanded',section.classList.contains('open'))">
-          ${iconHtml} ${safeTitle}
+
+          ${iconHtml} 
+          <div class="text-start">
+            <p class="text-md sm:text-lg text-brand dark:text-brand-lightest !m-0">
+              ${safeTitle}
+            </p>
+            <p class="text-sm text-gray-500 !m-0">${initiallyOpen ? '(Expanded, click to collapse)' : '(Collapsed, click to expand)'}</p>
+          </div>
         </button>
-        <div class="collapsible-content mt-4 hidden">
+        <div class="collapsible-content p-2 pt-0 hidden !m-0">
           ${entry.buffer}
         </div>
       </div>`

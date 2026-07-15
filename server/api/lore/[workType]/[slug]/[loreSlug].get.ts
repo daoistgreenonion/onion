@@ -1,5 +1,5 @@
 import { getNovelBySlug, getAnthologyBySlug, getLoreContent, getAnthologyStories } from '../../../../utils/works.server'
-import { processLoreContent } from '../../../../utils/processLoreContent'
+import { processLoreContent, processCollapsibleAndExplicitLore } from '../../../../utils/processLoreContent'
 import { createMarkdownItInstance } from '../../../../utils/markdownRenderer'
 import path from 'path'
 
@@ -39,22 +39,44 @@ export default defineEventHandler((event) => {
   }
 
   
-  // Full-lock check: if a loreChapter is set and chapterSlug is provided, verify access
-  if (loreMeta?.loreChapter && chapterSlug) {
-    const requiredIndex = chapters.findIndex(ch => ch.slug === loreMeta.loreChapter)
-    const currentIndex = chapters.findIndex(ch => ch.slug === chapterSlug)
-    if (requiredIndex === -1 || currentIndex < requiredIndex) {
-      // Not yet unlocked – return a locked response
+  // Full‑lock check: compare numeric chapter IDs, not slugs
+if (loreMeta?.loreChapter && chapterSlug) {
+  const requiredNum = parseInt(loreMeta.loreChapter, 10)       // e.g., 3
+  const currentNum = getChapterNumber(chapterSlug)              // parse "chapter-0003" or "3" → 3
+
+  if (!isNaN(requiredNum) && currentNum !== null) {
+    // Find the required chapter index (0‑based) by numeric ID
+    const requiredIndex = chapters.findIndex(ch => getChapterNumber(ch.slug) === requiredNum)
+    const currentIndex = chapters.findIndex(ch => getChapterNumber(ch.slug) === currentNum)
+
+    if (requiredIndex !== -1 && currentIndex < requiredIndex) {
       return { title: loreMeta.title, content: `<p class="text-red-500">This lore is unlocked after chapter "${loreMeta.loreChapter}".</p>` }
     }
   }
+}
 
   const lore = getLoreContent(workDir, loreSlug)
   if (!lore) throw createError({ statusCode: 404, statusMessage: 'Lore not found' })
 
-  const finalContent = chapterSlug
-    ? processLoreContent(lore.content, chapters, chapterSlug)
-    : lore.content
+
+  function getChapterNumber(raw: string): number | null {
+    const trimmed = raw.trim()
+    const match = trimmed.match(/^chapter-(\d+)$/i) || trimmed.match(/^(\d+)$/)
+    if (match) return parseInt(match[1] ?? '0', 10)
+    return null
+  }
+  
+  // Determine the current chapter index
+  let currentIndex = -1
+  if (chapterSlug) {
+    // Find the index by comparing numeric chapter IDs (to handle both "5" and "chapter-0005")
+    const chapterNum = getChapterNumber(chapterSlug)
+    if (chapterNum !== null) {
+      currentIndex = chapters.findIndex(ch => getChapterNumber(ch.slug) === chapterNum)
+    }
+  }
+
+  const finalContent = processLoreContent(lore.content, chapters.length, currentIndex)
 
   const md = createMarkdownItInstance()
 
