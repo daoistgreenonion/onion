@@ -19,7 +19,7 @@
       class="fixed inset-0 z-50 flex flex-col justify-end"
     >
       <div class="absolute inset-0 bg-black/30" @click="$emit('update:modelValue', false)" />
-      <div class="relative bg-white dark:bg-gray-900 rounded-t-xl max-h-[70vh] flex flex-col">
+      <div class="relative bg-white dark:bg-gray-900 rounded-t-xl max-h-[80vh] flex flex-col">
         <div class="absolute top-4 right-4">
           <button
             @pointerdown.prevent="$emit('update:modelValue', false)"
@@ -40,7 +40,7 @@
             @update:lore-chapter="(val) => $emit('update:loreChapter', val)"
           />
         </div>
-        <div class="h-16 shrink-0"></div>
+        <!-- <div class="flex h-16 w-full shrink-0 border-t border-gray-600"></div> -->
       </div>
     </div>
   </div>

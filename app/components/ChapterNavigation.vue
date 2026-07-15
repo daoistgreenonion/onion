@@ -3,7 +3,7 @@
     <NuxtLink
       v-if="prevChapter"
       :to="`${chapterBasePath}/${prevChapter.slug}`"
-      class="text-xs flex items-center sm:text-sm font-medium text-brand-lightest hover:underline"
+      class="text-xs flex items-center sm:text-sm font-medium text-brand dark:text-brand-lightest font-semibold hover:underline"
       aria-label="Previous chapter"
       title="Previous chapter"
     >
@@ -15,6 +15,7 @@
     <span v-else class="p-1 w-4 h-4" /> <!-- empty spacer for alignment -->
 
     <!-- Current chapter number -->
+    <slot />
     <span
       v-if="totalChapters > 1"
       class="text-xs text-gray-500 dark:text-gray-400 px-1"
@@ -25,7 +26,7 @@
     <NuxtLink
       v-if="nextChapter"
       :to="`${chapterBasePath}/${nextChapter.slug}`"
-      class="text-xs flex items-center sm:text-sm font-medium text-brand-lightest hover:underline"
+      class="text-xs flex items-center sm:text-sm font-medium text-brand dark:text-brand-lightest font-semibold hover:underline"
       aria-label="Next chapter"
       title="Next chapter"
     >

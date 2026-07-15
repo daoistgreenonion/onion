@@ -8,7 +8,7 @@
         <img
           :src="work.cover"
           :alt="work.title"
-          class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+          class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
         />
       </div>
   

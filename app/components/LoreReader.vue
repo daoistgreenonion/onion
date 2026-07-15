@@ -76,6 +76,9 @@ const defaultLoreSlug = computed(() => {
 const selectedChapter = ref('')   // was props.chapters?.[0]?.slug || ''
 const selectedLoreSlug = ref(props.initialSlug || defaultLoreSlug.value)
 
+// Lore navigation history
+const loreHistory = ref([])
+
 const iframeSrc = computed(() => {
   if (!selectedLoreSlug.value) return ''
   const params = new URLSearchParams()
@@ -87,12 +90,44 @@ const iframeSrc = computed(() => {
   return url
 })
 
+// Handle lore navigation (from panels or internal links)
 function handleLoreClick(url) {
-  // url is like `/embed-lore/novels/slug/loreSlug`
   const parts = url.split('/')
   const slug = parts[parts.length - 1]
+  if (selectedLoreSlug.value) {
+    loreHistory.value.push(selectedLoreSlug.value)
+  }
   selectedLoreSlug.value = slug
 }
+
+function goBack() {
+  if (loreHistory.value.length > 0) {
+    const prev = loreHistory.value.pop()
+    selectedLoreSlug.value = prev
+  }
+}
+
+// Listen for messages from the iframe (lore links)
+function onMessage(event) {
+  if (event.data?.type === 'navigate-lore' && event.data.loreSlug) {
+    if (event.data.loreSlug === ':back:') {
+      goBack()
+    } else {
+      if (selectedLoreSlug.value) {
+        loreHistory.value.push(selectedLoreSlug.value)
+      }
+      selectedLoreSlug.value = event.data.loreSlug
+    }
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('message', onMessage)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('message', onMessage)
+})
 
 // computed property
 const filteredLore = computed(() => {

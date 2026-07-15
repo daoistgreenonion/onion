@@ -2,27 +2,28 @@
   <div class="flex flex-col h-full">
     <!-- Header: work title, current chapter, back link, chapter navigation arrows -->
     <div class="flex items-center justify-between mb-4">
-      <h2 class="font-semibold text-lg truncate">{{ workTitle }}</h2>
-      <div class="flex items-center gap-1">
-        <ChapterNavigation
-          v-if="!loreOnly && showNavigation"
-          :prev-chapter="prevChapter"
-          :next-chapter="nextChapter"
-          :chapter-base-path="chapterBasePath"
-        />
-      </div>
+      <NuxtLink
+        v-if="backLink"
+        :to="backLink"
+        class="text-brand dark:text-brand-lightest hover:underline inline-block"
+        :class="loreOnly ? 'mb-6' : 'mb-0'"
+        @click="$emit('close')"
+      >
+        <h2 class="font-semibold text-lg truncate">{{ workTitle }}</h2>
+      </NuxtLink>
     </div>
 
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2 truncate">{{ currentTitle }}</p>
+    
 
-    <NuxtLink
-      v-if="backLink"
-      :to="backLink"
-      class="text-sm text-brand-lightest hover:underline mb-4 inline-block"
-      @click="$emit('close')"
+
+    <ChapterNavigation
+      v-if="!loreOnly && showNavigation"
+      :prev-chapter="prevChapter"
+      :next-chapter="nextChapter"
+      :chapter-base-path="chapterBasePath"
     >
-      ← Table of Contents
-    </NuxtLink>
+      <p class="text-sm text-gray-500 dark:text-gray-400 truncate">Ch. {{ currentChapterIndex + 1 }} - {{ currentTitle }}</p>
+    </ChapterNavigation>
 
     <!-- Tabs (only when not loreOnly) -->
     <div
@@ -39,11 +40,11 @@
       </button>
     </div>
 
-    <!-- Chapter list -->
+    <!-- Settings -->
     <div
       v-if="activeTab === 'settings' && !loreOnly"
       ref="chapterListRef"
-      class="flex-1 overflow-y-auto space-y-1"
+      class="flex-1 overflow-y-auto space-y-1 max-h-[50vh] min-h-[50vh] sm:max-h-none sm:min-h-none"
     >
       <ReadingPanelSettings />
     </div>
@@ -52,7 +53,7 @@
     <div
       v-if="activeTab === 'chapters' && hasChapters && !loreOnly"
       ref="chapterListRef"
-      class="flex-1 overflow-y-auto space-y-1"
+      class="flex-1 overflow-y-auto space-y-1 max-h-[50vh] min-h-[50vh] sm:max-h-none sm:min-h-none"
     >
       <NuxtLink
         v-for="(ch, index) in chapters"
@@ -74,7 +75,7 @@
     <!-- Lore list -->
     <div
       v-if="(activeTab === 'lore' || loreOnly) && hasLore"
-      class="flex-1 overflow-y-auto space-y-1"
+      class="flex-1 overflow-y-auto space-y-1 max-h-[50vh] min-h-[50vh] sm:max-h-none sm:min-h-none"
     >
       <div v-for="entry in lore" :key="entry.slug">
         <!-- Unlocked lore entry -->
@@ -104,7 +105,7 @@
     <!-- Skip targets list -->
     <div
       v-if="activeTab === 'skips' && skipTargets.length && !loreOnly"
-      class="flex-1 overflow-y-auto space-y-1"
+      class="flex-1 overflow-y-auto space-y-1 max-h-[50vh] min-h-[50vh] sm:max-h-none sm:min-h-none"
     >
       <a
         v-for="target in skipTargets"
@@ -116,6 +117,7 @@
         {{ target.label }}
       </a>
     </div>
+
 
     <!-- Lore chapter input -->
     <LoreChapterInput
@@ -183,7 +185,7 @@ function tabClass(tab) {
   return [
     'flex-1 py-2 text-sm font-medium text-center',
     activeTab.value === tab
-      ? 'text-brand-lightest border-b-2 border-brand-lightest'
+      ? 'text-brand dark:text-brand-lightest font-semibold border-b-2 border-brand dark:border-brand-lightest'
       : 'text-gray-500 dark:text-gray-400 border-b-2 border-transparent',
   ]
 }
@@ -221,7 +223,7 @@ function scrollToActiveChapter() {
   nextTick(() => {
     if (activeTab.value !== 'chapters') return
     const el = document.getElementById(`chapter-${props.currentSlug}`)
-    if (el) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    if (el) el.scrollIntoView({ block: 'center', behavior: 'instant' })
   })
 }
 </script>

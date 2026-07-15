@@ -1,12 +1,3 @@
-<script setup>
-const props = defineProps({
-  loreUrl: String,
-  open: Boolean,
-})
-
-const emit = defineEmits(['close'])
-</script>
-
 <template>
   <div
     v-if="open && loreUrl"
@@ -72,6 +63,17 @@ const emit = defineEmits(['close'])
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
+        <div v-if="open && loreUrl" class="...">
+          <!-- Back button (only on desktop panel, could also be on mobile) -->
+          <div v-if="hasHistory" class="absolute top-4 left-4 z-10">
+            <button @pointerdown.prevent="$emit('back')" class="p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          </div>
+          <!-- existing close button and iframe -->
+        </div>
         <iframe
           :src="loreUrl"
           class="w-full h-full border-0 bg-white dark:bg-gray-900"
@@ -82,3 +84,12 @@ const emit = defineEmits(['close'])
     </div>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  loreUrl: String,
+  open: Boolean,
+})
+
+const emit = defineEmits(['close'])
+</script>

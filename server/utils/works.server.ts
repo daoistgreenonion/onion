@@ -351,7 +351,8 @@ export function getLoreContent(workDir: string, loreSlug: string) {
   if (!fs.existsSync(lorePath)) return null
   const fileContent = fs.readFileSync(lorePath, 'utf8')
   const { data, content } = matter(fileContent)
-  return { title: data.title || loreSlug, content }
+  return { title: data.title || loreSlug, content, searchable: data.searchable ?? false,
+  searchMode: data.search_mode || 'title',  }
 }
 
 export function getLoreContentBySlug(workDir: string, loreSlug: string): string | null {

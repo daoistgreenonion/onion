@@ -85,5 +85,26 @@ export function createMarkdownItInstance() {
     return `<span class="${wrapperClass}">${imgTag}${captionHtml}${sourceHtml}</span>`
   }
 
+  // Detect lore links and add inline onclick handler
+  md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+    const token = tokens[idx]
+    if (!token) return self.renderToken(tokens, idx, options)
+
+    const href = token.attrGet('href') || ''
+    if (href.startsWith('/embed-lore/') || href.startsWith('/lore/')) {
+      const parts = href.split('/')
+      const loreSlug = parts[parts.length - 1]
+      if (loreSlug) {
+        // Inline onclick to send message to parent window
+        token.attrSet('onclick', `window.parent.postMessage({type:'navigate-lore',loreSlug:'${loreSlug}'},'*'); return false;`)
+        token.attrSet('style', 'cursor:pointer;')
+        // Remove the href so it doesn't navigate anywhere
+        token.attrSet('href', '#')
+      }
+    }
+
+    return self.renderToken(tokens, idx, options)
+  }
+
   return md
 }

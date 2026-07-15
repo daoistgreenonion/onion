@@ -42,10 +42,20 @@ export function processLoreContent(
   const sunsetStack: number[] = []
   let skippingBecauseSunset = false
 
+  let currentLockFrom = -1
+
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
     // Guard against undefined (should never happen, but satisfies strict TS)
     if (line === undefined) continue
+
+    // ---------- LOCK FROM (progressive reveal) ----------
+    const lockFromMatch = line.trim().match(/^\[\[lock_from\s+(\d+)\]\]\s*$/)
+    if (lockFromMatch) {
+      const lockChapter = parseInt(lockFromMatch[1] ?? '0', 10)
+      currentLockFrom = lockChapter - 1   // 0‑based
+      continue   // skip the marker line itself
+    }
 
     // ---------- SUNSET START ----------
     const sunsetStart = line.trim().match(/^\[\[sunset\s+(\d+)\]\]\s*$/)
@@ -108,7 +118,7 @@ export function processLoreContent(
     }
 
     // ---------- NORMAL LINE ----------
-    if (!skippingBecauseSunset) {
+    if (!skippingBecauseSunset && currentChapterIndex >= currentLockFrom) {
       resultLines.push(line)
     }
   }

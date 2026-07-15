@@ -7,7 +7,7 @@
       ? isAtTop
         ? 'bg-transparent border-transparent'
         : 'bg-white/90 dark:bg-dark/80 backdrop-blur-sm border-gray-200 dark:border-gray-700'
-      : 'bg-white dark:bg-dark border-gray-200 dark:border-gray-700'
+      : 'bg-white/90 dark:bg-dark/90 border-gray-200 dark:border-gray-700'
   "
 >
     <nav class="px-4 flex items-center justify-between transition-all" :class= "readingPage  ? 'h-10' : 'py-1', lorePage ? 'max-w-none' : 'max-w-5xl mx-auto'">
@@ -52,7 +52,7 @@
           
         </div>
         <!-- Theme toggle -->
-        <button @pointerdown.prevent="toggleTheme" class="p-2 rounded-md transition-colors" aria-label="Toggle theme">
+        <button @pointerdown.prevent="toggleTheme" class="p-2 rounded-md hover:text-brand dark:hover:text-brand-light transition-colors" aria-label="Toggle theme">
           <!-- Moon icon (visible when dark) -->
           <svg v-if="isDark"  class="h-5 h-5 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
@@ -96,7 +96,7 @@
           <!-- Explicit Preference Button -->
           <button
             @pointerdown.prevent="toggleExplicitPreference"
-            class="p-2 rounded-md hover:bg-gray-100/50 dark:hover:bg-gray-800 transition-colors font-bold w-[55px] sm:w-[70px]"
+            class="p-2 rounded-md hover:text-brand dark:hover:text-brand-light font-bold w-[55px] sm:w-[70px]"
             :aria-label="explicitPreference === 'expanded' ? 'Hide explicit content' : 'Show explicit content'"
             title="Toggle explicit content visibility"
           >
@@ -113,13 +113,13 @@
           <span class="hidden md:flex items-center gap-2">
             <span class="h-5">Support me</span>
             <span class="">
-              <svg class="w-7 h-7 text-brand-light" fill="currentColor" viewBox="0 0 24 24" aria-label="Support me" >
+              <svg class="w-7 h-7 text-brand" fill="currentColor" viewBox="0 0 24 24" aria-label="Support me" >
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09 C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5 c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
             </span>
           </span>
           <span class="md:hidden" aria-label="Support me">
-            <svg class="w-7 h-7 text-brand-light" fill="currentColor" viewBox="0 0 24 24" aria-label="Support me">
+            <svg class="w-7 h-7 text-brand" fill="currentColor" viewBox="0 0 24 24" aria-label="Support me">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09 C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5 c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
             </svg>
           </span>

@@ -2,7 +2,7 @@
 title: Dual Cultivation God Returns
 ---
 
-As mentioned in the [About Page](/about), this Lore is chapter-sensitive, and its contents vary depending on where you are in the novel, as long as you put in the chapter number you are currently reading.
+As mentioned in the [Glossary](/embed-lore/novels/dual-cultivation-god-returns/glossary), this Lore is chapter-sensitive, and its contents vary depending on where you are in the novel, as long as you put in the chapter number you are currently reading. [About](/about)
 
 ***
 

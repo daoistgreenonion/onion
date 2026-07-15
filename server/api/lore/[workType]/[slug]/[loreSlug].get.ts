@@ -80,23 +80,12 @@ if (loreMeta?.loreChapter && chapterSlug) {
 
   const md = createMarkdownItInstance()
 
-  // Force internal links to open outside the iframe and external links in new tab
-  md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
-    const token = tokens[idx]
-    if (!token) return ''
-    const href = token.attrGet('href') || ''
-    if (href.startsWith('http')) {
-      token.attrSet('target', '_blank')
-      token.attrSet('rel', 'noopener noreferrer')
-    } else {
-      token.attrSet('target', '_parent')
-    }
-    return self.renderToken(tokens, idx, options)
-  }
+
 
   const html = md.render(finalContent)
   const explicitPref = String(getQuery(event).explicit || 'collapsed')
   const finalHtml = processCollapsibleAndExplicitLore(html, explicitPref)
 
-  return { title: lore.title, content: finalHtml  }
+  return { title: lore.title, content: finalHtml, searchable: lore.searchable ?? false,
+  searchMode: lore.searchMode || 'title', }
 })

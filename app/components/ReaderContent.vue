@@ -84,7 +84,9 @@
   <LoreOverlay
     :lore-url="loreUrl"
     :open="loreOpen"
+    :has-history="loreHistory.length > 0"
     @close="closeLoreOverlay"
+    @back="goBackLore"
   />
 </template>
 
@@ -226,5 +228,47 @@ watch(loreOpen, (isOpen) => {
     window.scrollTo(0, parseInt(scrollY || '0') * -1)
   }
 })
+
+
+import { ref, onMounted, onUnmounted } from 'vue'
+
+const loreHistory = ref<string[]>([])
+
+function onLoreMessage(event: MessageEvent) {
+  if (event.data?.type === 'navigate-lore' && event.data.loreSlug) {
+    const workType = props.workType || 'novels'
+    const workSlug = props.workSlug || ''
+    const params = new URLSearchParams({
+      chapter: props.currentSlug || '',
+      explicit: explicitPreference.value,
+    })
+    if (event.data.loreSlug === ':back:') {
+      if (loreHistory.value.length > 0) {
+        const prevUrl = loreHistory.value.pop()!
+        loreUrl.value = prevUrl
+      }
+    } else {
+      const newUrl = `/embed-lore/${workType}/${workSlug}/${event.data.loreSlug}?${params.toString()}`
+      if (loreUrl.value) {
+        loreHistory.value.push(loreUrl.value)
+      }
+      loreUrl.value = newUrl
+    }
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('message', onLoreMessage)
+})
+onUnmounted(() => {
+  window.removeEventListener('message', onLoreMessage)
+})
+
+function goBackLore() {
+  if (loreHistory.value.length > 0) {
+    const prevUrl = loreHistory.value.pop()!
+    loreUrl.value = prevUrl
+  }
+}
 
 </script>
