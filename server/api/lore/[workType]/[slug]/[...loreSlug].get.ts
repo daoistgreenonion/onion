@@ -64,9 +64,8 @@ export default defineEventHandler((event) => {
     }
   }
 
-  console.log('Looking for lore slug:', loreSlug, 'in workDir:', workDir)
+  
   const lore = getLoreContent(workDir, loreSlug)
-  console.log('Found lore?', !!lore)
   if (!lore) throw createError({ statusCode: 404, statusMessage: 'Lore not found' })
 
   // Compute current chapter index for lock/sunset processing

@@ -47,13 +47,6 @@ export default defineEventHandler((event) => {
     workDir
   )
 
-  // 4. Filter lore for reading panels
-  const currentChapterIndex = novel.chapters.findIndex(ch => ch.slug === chapter)
-  const filteredLore = (novel.lore || []).filter(entry => {
-    if (!entry.loreChapter) return true
-    const unlockIndex = novel.chapters.findIndex(ch => ch.slug === entry.loreChapter)
-    return unlockIndex !== -1 && unlockIndex <= currentChapterIndex
-  })
 
 
   return {
@@ -64,7 +57,7 @@ export default defineEventHandler((event) => {
     backLink: `/novels/${slug}`,
     chapterBasePath: `/novels/${slug}`,
     content: contentWithLore,
-    lore: filteredLore || null,
+    lore: novel.lore  || null,
     workSlug: slug,
     workType: 'novels',
     skipTargets,

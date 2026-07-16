@@ -28,7 +28,7 @@ export interface NovelMeta {
   lore?: ChapterMeta[]
   date?: string
   explicit?: boolean
-  // loreChapter?: string   // the slug of the chapter that unlocks this lore
+  loreChapter?: string   // the slug of the chapter that unlocks this lore
   extraFiles?: ExtraFile[]
 }
 
