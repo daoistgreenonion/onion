@@ -1,6 +1,6 @@
 <template>
   <main class="max-w-5xl mx-auto py-12 px-4">
-    <div class="flex justify-between sm:mb-8">
+    <div class="flex flex-wrap justify-between sm:mb-8">
       <h1 class="text-4xl font-bold">Short Stories</h1>
   
       <!-- Mobile toggle icons (unchanged) -->
@@ -45,7 +45,18 @@
             <option v-for="tag in allMaintags" :key="tag" :value="tag">{{ tag }}</option>
           </select>
         </div>
-          <!-- Search -->
+        <!-- Explicit -->
+        <!-- <div class="flex items-center gap-2">
+          <label for="show-explicit" class="text-sm text-gray-600 text-nowrap dark:text-gray-400">Show NSFW Only</label>
+          <input 
+            type="checkbox" 
+            name="show-explicit" 
+            id="show-explicit"
+            class="h-7 w-7 rounded-md"
+          >
+        </div> -->
+
+        <!-- Search -->
         <div class="flex items-center gap-2">
           <label for="search-desktop" class="text-sm text-gray-600 dark:text-gray-400">Search</label>
           <input
@@ -56,12 +67,14 @@
             class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
           />
         </div>
+
+        
       </div>
   
     </div>
     
     <!-- Mobile controls (shown/hidden via Vue) -->
-    <div v-if="showControls" class="sm:hidden flex flex-wrap items-center gap-4 mb-8 bg-gray-200 dark:bg-gray-200/20">
+    <div v-if="showControls" class="sm:hidden flex flex-wrap items-center gap-4 mb-8">
       <div class="flex items-center gap-2">
         <label for="sort-mobile" class="text-sm text-gray-600 dark:text-gray-400">Sort</label>
         <select
@@ -86,6 +99,19 @@
           <option v-for="tag in allMaintags" :key="tag" :value="tag">{{ tag }}</option>
         </select>
       </div>
+
+      <!-- Search -->
+        <div class="flex w-full items-center gap-2">
+          <label for="search-desktop" class="text-sm text-gray-600 dark:text-gray-400">Search</label>
+          <input
+            id="search-desktop"
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search stories…"
+            class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+          />
+        </div>
+
     </div>
 
     <div class="mb-8">
@@ -145,7 +171,10 @@ const sortedStories = computed(() => {
     list = list.filter(s => (s.maintags || []).includes(selectedMaintag.value))
   }
 
-  // 2. filter by search query (title, synopsis, tags)
+  // 2. filter explicit
+  // if (s.explicit) list = list.filter(s => (s.explicit))
+
+  // 3. filter by search query (title, synopsis, tags)
   const query = searchQuery.value.trim().toLowerCase()
   if (query) {
     list = list.filter(s => {
@@ -159,7 +188,7 @@ const sortedStories = computed(() => {
     })
   }
 
-  // 3. sort
+  // 4. sort
   const sorted = [...list]
   if (currentSort.value === 'oldest') {
     sorted.sort((a, b) => (a.date ? new Date(a.date).getTime() : 0) - (b.date ? new Date(b.date).getTime() : 0))

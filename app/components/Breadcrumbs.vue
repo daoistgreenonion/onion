@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="crumbs.length > 1" aria-label="Breadcrumb" class="py-0" :class="smallSize ? 'pt-0 max-w-xl lg:max-w-2xl 2xl:max-w-3xl' : 'pt-4 max-w-5xl', lorePage ? 'px-4 sm:px-10' : 'px-4 mx-auto'">
+  <nav v-if="crumbs.length > 1" aria-label="Breadcrumb" class="py-0 px-4 mx-auto 2xl:max-w-5xl" :class="smallSize ? 'pt-0' : 'pt-4'">
     <ol class="flex flex-wrap items-center gap-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
       <li v-for="(crumb, i) in crumbs" :key="crumb.href" class="flex items-center sm:gap-1">
         <span v-if="i > 0" aria-hidden="true" class="sm:mx-1 text-gray-400 dark:text-gray-600">/</span>

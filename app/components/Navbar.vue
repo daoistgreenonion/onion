@@ -10,9 +10,9 @@
       : 'bg-white/90 dark:bg-dark/90 backdrop-blur-sm border-gray-200 dark:border-gray-700'
   "
 >
-    <nav class="px-4 flex items-center justify-between transition-all" :class= "readingPage  ? 'h-10' : 'py-1', lorePage ? 'max-w-none' : 'max-w-5xl mx-auto'">
+    <nav class="px-4 flex items-center justify-between transition-all max-w-5xl mx-auto" :class= "readingPage  ? 'h-10' : 'py-1'">
       <!-- Logo -->
-      <NuxtLink to="/" class="flex shrink-0 transition-all flex items-center" :class="isHomePage ? isAtTop ? 'opacity-60 hover:opacity-100 text-brand-lightest dark:text-brand' : 'opacity-80 hover:opacity-100 text-brand' : 'opacity-80 hover:opacity-100 text-brand' , lorePage ? 'lg:mr-[15%] lg:ml-2' : 'lg:mr-12'">
+      <NuxtLink to="/" class="flex shrink-0 transition-all flex items-center lg:mr-12" :class="isHomePage ? isAtTop ? 'opacity-60 hover:opacity-100 text-brand-lightest dark:text-brand' : 'opacity-80 hover:opacity-100 text-brand' : 'opacity-80 hover:opacity-100 text-brand'">
         <img src="/images/seal.png" alt="Site logo" class="w-auto" :class= "readingPage  ? 'h-10' : 'h-16'"/>
         <p class="hidden sm:flex font-bold text-md">DaoistGreenOnion</p>
         <p class="flex sm:hidden font-bold text-xl">DGO</p>

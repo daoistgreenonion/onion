@@ -1,5 +1,5 @@
 <template>
-  <main class="">
+  <main class="xl:mx-auto sm:max-w-[60%] md:max-w-[65%] lg:max-w-[65%] xl:max-w-3xl 2xl:max-w-5xl transition-all duration-300">
     <LoreReader
       v-if="novel && novel.lore?.length"
       :work-title="novel.title"

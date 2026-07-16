@@ -1,5 +1,5 @@
 <template>
-  <main class="max-w-5xl mx-auto py-12 px-4">
+  <main class="max-w-3xl mx-auto py-12 px-4">
     <h1 class="text-4xl font-bold mb-8">News</h1>
 
     <div v-if="news?.length" class="space-y-6">

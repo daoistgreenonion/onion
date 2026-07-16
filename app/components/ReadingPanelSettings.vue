@@ -30,70 +30,20 @@
     </div>
   </div>
   <div class="grid grid-cols-6 gap-0.5 border border-gray-100 dark:border-gray-600">
-    <!-- Extra Small -->
     <button
-      @pointerdown.prevent="setFontSize('xs')"
-      class="px-1.5 py-1 text-xs rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-      :class="fontSize === 'xs' ? 'text-brand-lightest font-bold underline' : 'text-gray-600 dark:text-gray-400'"
-      aria-label="Small font size"
-      title="Small"
-    >
-      Aa
-    </button>
-    <!-- Small -->
-    <button
-      @pointerdown.prevent="setFontSize('sm')"
-      class="px-1.5 py-1 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-      :class="fontSize === 'sm' ? 'text-brand-lightest font-bold underline' : 'text-gray-600 dark:text-gray-400'"
-      aria-label="Small font size"
-      title="Small"
-    >
-      Aa
-    </button>
-
-    <!-- Medium -->
-    <button
-      @pointerdown.prevent="setFontSize('md')"
-      class="px-1.5 py-1 text-md rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-      :class="fontSize === 'md' ? 'text-brand-lightest font-bold underline' : 'text-gray-600 dark:text-gray-400'"
-      aria-label="Medium font size"
-      title="Medium"
-    >
-      Aa
-    </button>
-
-    <!-- Large -->
-    <button
-      @pointerdown.prevent="setFontSize('lg')"
-      class="px-1.5 py-1 text-lg rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-      :class="fontSize === 'lg' ? 'text-brand-lightest font-bold underline' : 'text-gray-600 dark:text-gray-400'"
-      aria-label="Large font size"
-      title="Large"
-    >
-      Aa
-    </button>
-    <!-- Extra Large -->
-    <button
-      @pointerdown.prevent="setFontSize('xl')"
-      class="px-1.5 py-1 text-xl rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-      :class="fontSize === 'xl' ? 'text-brand-lightest font-bold underline' : 'text-gray-600 dark:text-gray-400'"
-      aria-label="Large font size"
-      title="Large"
-    >
-      Aa
-    </button>
-    <!-- EEExtra Large -->
-    <button
-      @pointerdown.prevent="setFontSize('2xl')"
-      class="px-1.5 py-1 text-xl rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-      :class="fontSize === '2xl' ? 'text-brand-lightest font-bold underline' : 'text-gray-600 dark:text-gray-400'"
-      aria-label="Large font size"
-      title="Large"
+      v-for="fontButton in fontsList"
+      :key="fontButton.key"
+      @pointerdown.prevent="setFontSize(fontButton.key)"
+      class="rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+      :class= "fontSize === fontButton.key 
+        ? `text-brand-lightest font-bold underline`
+        : 'text-gray-600 dark:text-gray-400',
+      fontButton.size
+      "
     >
       Aa
     </button>
   </div>
-  
 </template>
 
 <script setup>
@@ -103,6 +53,15 @@ import { useExplicitPreference } from '~/composables/useExplicitPreference'
 
 
 const { fontSize, setFontSize } = useFontSize()
+const fontsList =  [
+  {key: 'xs', size: 'text-xs'}, 
+  {key: 'sm', size: 'text-sm'}, 
+  {key: 'md', size: 'text-base'}, 
+  {key: 'lg', size: 'text-lg'},
+  {key: 'xl', size: 'text-xl'}, 
+  {key: '2xl', size: 'text-2xl'},
+]
+
 const { explicitPreference, toggleExplicitPreference } = useExplicitPreference()
 // ==================================================== THEME LOGIC ===============================================
 

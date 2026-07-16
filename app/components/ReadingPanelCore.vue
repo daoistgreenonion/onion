@@ -183,12 +183,12 @@ const tabs = computed(() => {
 })
 
 function tabClass(tab) {
-  return [
-    'flex-1 py-2 text-sm font-medium text-center',
-    activeTab.value === tab
-      ? 'text-brand dark:text-brand-lightest font-semibold border-b-2 border-brand dark:border-brand-lightest'
-      : 'text-gray-500 dark:text-gray-400 border-b-2 border-transparent',
-  ]
+  let finalCLass = ''
+  finalCLass += 'flex-1 py-2 text-sm font-medium text-center '
+  if(activeTab.value === tab) finalCLass += 'text-brand dark:text-brand-lightest font-semibold border-b-2 border-brand dark:border-brand-lightest '
+  else finalCLass += 'text-gray-500 dark:text-gray-400 border-transparent border-b-2 '
+  if(tab === 'settings') finalCLass += ''
+  return finalCLass
 }
 
 const currentChapterIndex = computed(() => {

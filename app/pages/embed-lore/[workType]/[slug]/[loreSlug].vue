@@ -1,5 +1,5 @@
 <template>
-  <div v-if="lore" class="sm:max-w-[60%] lg:max-w-3xl h-full">
+  <div v-if="lore" class="w-full h-full">
     <!-- Search toggle & input (only if searchable) -->
     <div v-if="lore.searchable" class="relative flex items-center">
       <!-- Search icon button (mobile: absolute; desktop: inline) -->

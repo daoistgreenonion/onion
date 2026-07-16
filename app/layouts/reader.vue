@@ -1,6 +1,6 @@
 <template>
   <Navbar :class="{ '-translate-y-full': hidden }" :readingPage="true" />
-  <div class="pt-20 sm:pt-16"></div>
+  <div class="h-12"></div>
   <Breadcrumbs :smallSize="true" /> 
   <main class="">
     <slot />

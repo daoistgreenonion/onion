@@ -15,7 +15,7 @@
     <!-- Side panel -->
     <div
       v-if="modelValue"
-      class="hidden sm:block fixed top-12 right-0 w-72 bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700 shadow-xl z-50"
+      class="hidden sm:block fixed top-11 right-0 w-72 2xl:w-80 bg-white dark:bg-gray-900 border-l border-t border-b border-gray-200 dark:border-gray-700 shadow-xl z-50"
       style="height: calc(100vh - 3rem);"
     >
       <div class="p-4 h-full flex flex-col">

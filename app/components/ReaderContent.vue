@@ -167,7 +167,7 @@ const fontSizeClass = computed(() => {
   switch (fontSize.value) {
     case 'xs': return 'text-xs'
     case 'sm': return 'text-sm'
-    case 'md': return 'text-md'
+    case 'md': return 'text-base'
     case 'lg': return 'text-lg'
     case 'xl': return 'text-xl'
     case '2xl': return 'text-2xl'

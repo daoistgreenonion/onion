@@ -62,10 +62,13 @@
   font-size: 1.125rem;     
 }
 .reader-font-lg {
-  font-size: 1.250rem; 
+  font-size: 1.25rem; 
 }
 .reader-font-xl {
   font-size: 1.375rem; 
+}
+.reader-font-2xl {
+  font-size: 1.5rem; 
 }
 
 /* Always hide collapsible content by default (Tailwind 'hidden' sets display: none) */
