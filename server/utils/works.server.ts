@@ -8,6 +8,8 @@ export interface ChapterMeta {
   loreChapter?: string   // the slug of the chapter that unlocks this lore
   lockedMessage?: boolean
   explicit?: boolean   // ← new
+  children?: ChapterMeta[]   // sub-entries inside a folder
+  parentPath?: string
 }
 
 export type WorkType = 'long-novel' | 'short-novel' | 'anthology' | 'short-story'
@@ -26,7 +28,7 @@ export interface NovelMeta {
   lore?: ChapterMeta[]
   date?: string
   explicit?: boolean
-  loreChapter?: string   // the slug of the chapter that unlocks this lore
+  // loreChapter?: string   // the slug of the chapter that unlocks this lore
   extraFiles?: ExtraFile[]
 }
 
@@ -134,34 +136,83 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
   const loreDir = path.join(workDir, 'lore')
   let lore: ChapterMeta[] = []
   if (fs.existsSync(loreDir)) {
-    lore = fs.readdirSync(loreDir)
-      .filter(f => f.endsWith('.md'))
-      .map(f => {
-        const lorePath = path.join(loreDir, f)
-        const loreContent = fs.readFileSync(lorePath, 'utf8')
-        const { data: lData } = matter(loreContent)
-        return {
-          slug: f.replace(/\.md$/, ''),
-          title: lData.title || f.replace(/\.md$/, ''),
-          loreChapter: lData.chapter || undefined,   // ← new field
-          explicit: lData.explicit ?? false,
+    const entries = fs.readdirSync(loreDir, { withFileTypes: true })
+    const flatEntries: ChapterMeta[] = []
+
+    for (const entry of entries) {
+      if (entry.isFile() && entry.name.endsWith('.md')) {
+        // Flat lore file (top‑level)
+        const slug = entry.name.replace(/\.md$/, '')
+        const filePath = path.join(loreDir, entry.name)
+        const raw = fs.readFileSync(filePath, 'utf8')
+        const { data: fData } = matter(raw)
+        flatEntries.push({
+          slug,
+          title: fData.title || slug,
+          loreChapter: fData.chapter || undefined,
+          lockedMessage: fData.locked_message ?? false,
+          explicit: fData.explicit ?? false,
+          children: undefined,
+        })
+      } else if (entry.isDirectory()) {
+        // Folder – check if it contains meta.md
+        const folderPath = path.join(loreDir, entry.name)
+        const metaPath = path.join(folderPath, 'meta.md')
+        if (fs.existsSync(metaPath)) {
+          const raw = fs.readFileSync(metaPath, 'utf8')
+          const { data: metaData } = matter(raw)
+          const parentSlug = entry.name
+          const parentTitle = metaData.title || parentSlug
+
+          // Collect child entries inside this folder (excluding meta.md)
+          const childEntries: ChapterMeta[] = []
+          const childFiles = fs.readdirSync(folderPath, { withFileTypes: true })
+          for (const child of childFiles) {
+            if (child.isFile() && child.name !== 'meta.md' && child.name.endsWith('.md')) {
+              const childSlug = child.name.replace(/\.md$/, '')
+              const childPath = path.join(folderPath, child.name)
+              const childRaw = fs.readFileSync(childPath, 'utf8')
+              const { data: childData } = matter(childRaw)
+              childEntries.push({
+                slug: childSlug,
+                title: childData.title || childSlug,
+                loreChapter: childData.chapter || undefined,
+                lockedMessage: childData.locked_message ?? false,
+                explicit: childData.explicit ?? false,
+                parentPath: parentSlug + '/' + childSlug, 
+                children: undefined,
+              })
+            }
+          }
+
+          // Add the parent entry with children
+          flatEntries.push({
+            slug: parentSlug,
+            title: parentTitle,
+            loreChapter: metaData.chapter || undefined,
+            lockedMessage: metaData.locked_message ?? false,
+            explicit: metaData.explicit ?? false,
+            children: childEntries.length ? childEntries : undefined,
+          })
         }
+      }
+    }
+
+    lore = flatEntries
+
+    // Apply custom lore order if provided in meta.md
+    if (data.lore_order && Array.isArray(data.lore_order)) {
+      const orderMap = new Map<string, number>()
+      data.lore_order.forEach((slug: string, index: number) => {
+        orderMap.set(slug, index)
       })
-  }
 
-
-  // Apply custom lore order if provided in meta.md
-  if (data.lore_order && Array.isArray(data.lore_order)) {
-    const orderMap = new Map<string, number>()
-    data.lore_order.forEach((slug: string, index: number) => {
-      orderMap.set(slug, index)
-    })
-
-    lore.sort((a, b) => {
-      const orderA = orderMap.has(a.slug) ? orderMap.get(a.slug)! : Infinity
-      const orderB = orderMap.has(b.slug) ? orderMap.get(b.slug)! : Infinity
-      return orderA - orderB
-    })
+      lore.sort((a, b) => {
+        const orderA = orderMap.has(a.slug) ? orderMap.get(a.slug)! : Infinity
+        const orderB = orderMap.has(b.slug) ? orderMap.get(b.slug)! : Infinity
+        return orderA - orderB
+      })
+    }
   }
 
   // Extra files in the novel root (excluding meta.md, chapters.md, and any files already handled)
@@ -404,12 +455,36 @@ export function getNewsBySlug(slug: string): NewsItem | null {
 
 // ---- lore ----
 export function getLoreContent(workDir: string, loreSlug: string) {
-  const lorePath = path.join(workDir, 'lore', `${loreSlug}.md`)
-  if (!fs.existsSync(lorePath)) return null
-  const fileContent = fs.readFileSync(lorePath, 'utf8')
-  const { data, content } = matter(fileContent)
-  return { title: data.title || loreSlug, content, searchable: data.searchable ?? false,
-  searchMode: data.search_mode || 'title', explicit: data.explicit ?? false, }
+  // First, try the direct file (flat lore or child entry)
+  const directPath = path.join(workDir, 'lore', `${loreSlug}.md`)
+  if (fs.existsSync(directPath)) {
+    const raw = fs.readFileSync(directPath, 'utf8')
+    const { data, content } = matter(raw)
+    return {
+      title: data.title || loreSlug,
+      content,
+      searchable: data.searchable ?? false,
+      searchMode: data.search_mode || 'title',
+      explicit: data.explicit ?? false,
+    }
+  }
+
+  // If not found, check if there's a folder with that slug containing meta.md
+  const folderPath = path.join(workDir, 'lore', loreSlug)
+  const metaPath = path.join(folderPath, 'meta.md')
+  if (fs.existsSync(metaPath)) {
+    const raw = fs.readFileSync(metaPath, 'utf8')
+    const { data, content } = matter(raw)
+    return {
+      title: data.title || loreSlug,
+      content,
+      searchable: data.searchable ?? false,
+      searchMode: data.search_mode || 'title',
+      explicit: data.explicit ?? false,
+    }
+  }
+
+  return null
 }
 
 export function getLoreContentBySlug(workDir: string, loreSlug: string): string | null {

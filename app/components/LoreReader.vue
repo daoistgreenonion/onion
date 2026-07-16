@@ -97,12 +97,12 @@ const iframeSrc = computed(() => {
 
 // Handle lore navigation (from panels or internal links)
 function handleLoreClick(url) {
-  const parts = url.split('/')
-  const slug = parts[parts.length - 1]
+  const basePath = `/embed-lore/${props.workType}/${props.workSlug}/`
+  const fullSlug = url.startsWith(basePath) ? url.slice(basePath.length) : url.split('/').pop()
   if (selectedLoreSlug.value) {
     loreHistory.value.push(selectedLoreSlug.value)
   }
-  selectedLoreSlug.value = slug
+  selectedLoreSlug.value = fullSlug
 }
 
 function goBack() {

@@ -142,9 +142,12 @@ const selectedLoreSlug = ref('')
 
 function openLoreOverlay(url) {
   // url is like `/embed-lore/novels/slug/loreSlug`
-  const parts = url.split('/')
-  const slug = parts[parts.length - 1]
-  selectedLoreSlug.value = slug
+  const basePath = `/embed-lore/${props.workType}/${props.workSlug}/`
+  const fullSlug = url.startsWith(basePath) ? url.slice(basePath.length) : url.split('/').pop()
+  if (selectedLoreSlug.value) {
+    loreHistory.value.push(selectedLoreSlug.value)
+  }
+  selectedLoreSlug.value = fullSlug
 
   const params = new URLSearchParams({
     chapter: props.currentSlug || '',

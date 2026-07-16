@@ -90,24 +90,33 @@ export function createMarkdownItInstance() {
 
   // Detect lore links and add inline onclick handler
   md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
-    const token = tokens[idx]
-    if (!token) return self.renderToken(tokens, idx, options)
+  const token = tokens[idx]
+  if (!token) return self.renderToken(tokens, idx, options)
 
-    const href = token.attrGet('href') || ''
-    if (href.startsWith('/embed-lore/') || href.startsWith('/lore/')) {
-      const parts = href.split('/')
-      const loreSlug = parts[parts.length - 1]
-      if (loreSlug) {
-        // Inline onclick to send message to parent window
-        token.attrSet('onclick', `window.parent.postMessage({type:'navigate-lore',loreSlug:'${loreSlug}'},'*'); return false;`)
-        token.attrSet('style', 'cursor:pointer;')
-        // Remove the href so it doesn't navigate anywhere
-        token.attrSet('href', '#')
-      }
+  const href = token.attrGet('href') || ''
+
+  // Lore link → add onclick handler and replace href with #
+  if (href.startsWith('/embed-lore/') || href.startsWith('/lore/')) {
+    const parts = href.split('/')
+    const loreSlug = parts.slice(4).join('/')   // everything after /embed-lore/workType/slug/
+    if (loreSlug) {
+      token.attrSet('onclick', `window.parent.postMessage({type:'navigate-lore',loreSlug:'${loreSlug}'},'*'); return false;`)
+      token.attrSet('style', 'cursor:pointer;')
+      token.attrSet('href', '#')
     }
-
-    return self.renderToken(tokens, idx, options)
+  } else {
+    // External links → new tab
+    if (href.startsWith('http')) {
+      token.attrSet('target', '_blank')
+      token.attrSet('rel', 'noopener noreferrer')
+    } else {
+      // Internal links → break out of iframe
+      token.attrSet('target', '_parent')
+    }
   }
+
+  return self.renderToken(tokens, idx, options)
+}
 
   return md
 }

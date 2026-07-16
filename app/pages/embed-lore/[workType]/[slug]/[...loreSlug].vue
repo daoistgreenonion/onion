@@ -49,7 +49,7 @@ import { ref, onMounted, watch, nextTick } from 'vue'
 definePageMeta({ layout: false })
 
 const route = useRoute()
-const { workType, slug, loreSlug } = route.params
+const { workType, slug } = route.params
 const chapterSlug = route.query.chapter || ''
 const explicitPref = route.query.explicit || 'collapsed'
 
@@ -58,6 +58,7 @@ const params = new URLSearchParams()
 if (chapterSlug) params.set('chapter', chapterSlug)
 if (explicitPref) params.set('explicit', explicitPref)
 
+const loreSlug = (route.params.loreSlug || []).join('/')
 const apiUrl = `/api/lore/${workType}/${slug}/${loreSlug}?${params.toString()}`
 const { data: lore, error } = await useFetch(apiUrl)
 
