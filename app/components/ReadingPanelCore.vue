@@ -73,33 +73,97 @@
 
     <!-- Lore list -->
     <div
-      v-if="(activeTab === 'lore' || loreOnly) && hasLore"
-      class="flex-1 overflow-y-auto space-y-1 max-h-[50vh] min-h-[50vh] sm:max-h-none sm:min-h-none"
-    >
-      <div v-for="entry in filteredLore" :key="entry.slug">
-        <!-- Unlocked lore entry -->
-        <button
-          v-if="isLoreUnlocked(entry)"
-          @pointerdown.prevent="$emit('loreOpen', `/embed-lore/${workType}/${workSlug}/${entry.slug}`)"
-          :class="[
-            'block w-full text-left px-2 py-1 rounded text-sm',
-            entry.slug === selectedLoreSlug
-              ? 'bg-brand-light/20 text-brand-light'
-              : 'hover:bg-gray-100 dark:hover:bg-gray-800'
-          ]"
-        >
-          {{ entry.title }}
-        </button>
+  v-if="(activeTab === 'lore' || loreOnly) && hasLore"
+  class="flex-1 overflow-y-auto space-y-1"
+>
+  <template v-for="entry in loreSafe" :key="entry.slug">
+    <!-- Parent entry (with children) -->
+    <div v-if="entry.children && entry.children.length">
+      <button
+        v-if="isLoreUnlocked(entry)"
+        @pointerdown.prevent="openEntry(entry)"
+        :class="[
+          'block w-full text-left px-2 py-1 rounded text-sm',
+          entry.slug === selectedLoreSlug
+            ? 'bg-brand-light/20 text-brand-light'
+            : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+        ]"
+      >
+        {{ entry.title }}
+      </button>
+      <div v-else class="px-2 py-1 rounded text-sm text-gray-400 dark:text-gray-600">
+        <span class="line-through">{{ entry.title }}</span>
+        <p v-if="entry.lockedMessage" class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+          Unlocked after {{ unlockChapterTitle(entry) }}
+        </p>
+      </div>
 
-        <!-- Locked lore entry -->
-        <div v-else class="px-2 py-1 rounded text-sm text-gray-400 dark:text-gray-600">
-          <span class="line-through">{{ entry.title }}</span>
-          <p v-if="entry.lockedMessage" class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-            Unlocked after {{ unlockChapterTitle(entry) }}
-          </p>
+      <!-- Children (visible when expanded) -->
+      <div v-if="expandedSlug === entry.slug" class="ml-6 space-y-1">
+        <div v-for="(child, index) in entry.children" :key="child.slug" class="flex items-start gap-0.5">
+          <!-- Tree line SVG (only if parent is expanded) -->
+          <svg
+            v-if="expandedSlug === entry.slug"
+            class="w-4 h-5 mt-0.5 flex-shrink-0 text-gray-400 dark:text-gray-600"
+            viewBox="0 0 16 20"
+            fill="none"
+            stroke="currentColor"
+          >
+            <!-- Vertical stem (from top to mid) -->
+            <line x1="2" y1="0" x2="2" y2="10" />
+            <!-- Horizontal branch -->
+            <line x1="2" y1="10" x2="10" y2="10" />
+            <!-- Vertical continuation (only if not last child) -->
+            <line v-if="index !== entry.children.length - 1" x1="2" y1="10" x2="2" y2="20" />
+          </svg>
+
+          <!-- Child entry button (unchanged) -->
+          <button
+            v-if="isLoreUnlocked(child)"
+            @pointerdown.prevent="openEntry(child)"
+            :class="[
+              'flex-1 text-left px-2 py-1 rounded text-sm',
+              child.slug === selectedLoreSlug
+                ? 'bg-brand-light/20 text-brand-light'
+                : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+            ]"
+          >
+            {{ child.title }}
+          </button>
+          <!-- Locked child (unchanged) -->
+          <div v-else class="flex-1 px-2 py-1 rounded text-sm text-gray-400 dark:text-gray-600">
+            <span class="line-through">{{ child.title }}</span>
+            <p v-if="child.lockedMessage" class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+              Unlocked after {{ unlockChapterTitle(child) }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Flat entry (no children) -->
+    <template v-else>
+      <button
+        v-if="isLoreUnlocked(entry)"
+        @pointerdown.prevent="openEntry(entry)"
+        :class="[
+          'block w-full text-left px-2 py-1 rounded text-sm',
+          entry.slug === selectedLoreSlug
+            ? 'bg-brand-light/20 text-brand-light'
+            : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+        ]"
+      >
+        {{ entry.title }}
+      </button>
+      <div v-else class="px-2 py-1 rounded text-sm text-gray-400 dark:text-gray-600">
+        <span class="line-through">{{ entry.title }}</span>
+        <p v-if="entry.lockedMessage" class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+          Unlocked after {{ unlockChapterTitle(entry) }}
+        </p>
+      </div>
+    </template>
+  </template>
+</div>
 
     <!-- Skip targets list -->
     <div
@@ -237,4 +301,37 @@ function scrollToActiveChapter() {
     if (el) el.scrollIntoView({ block: 'center', behavior: 'instant' })
   })
 }
+
+const expandedSlug = ref(null)
+
+// function handleParentClick(entry, event) {
+//   // Toggle children visibility
+//   if (expandedSlug.value === entry.slug) {
+//     expandedSlug.value = null
+//   } else {
+//     expandedSlug.value = entry.slug
+//   }
+//   // Open the parent entry itself
+//   $emit('loreOpen', `/embed-lore/${workType}/${workSlug}/${entry.slug}`)
+// }
+
+
+function openEntry(entry) {
+  // Determine which parent's children to show
+  if (entry.children && entry.children.length > 0) {
+    // Parent entry – show its children
+    expandedSlug.value = entry.slug
+  } else if (entry.parentPath) {
+    // Child entry – keep parent's children visible
+    expandedSlug.value = entry.parentPath.split('/')[0]
+  } else {
+    // Flat entry – hide any open children
+    expandedSlug.value = null
+  }
+
+  // Emit lore-open with the correct path
+  const path = entry.parentPath || entry.slug
+  emit('loreOpen', `/embed-lore/${props.workType}/${props.workSlug}/${path}`)
+}
+
 </script>

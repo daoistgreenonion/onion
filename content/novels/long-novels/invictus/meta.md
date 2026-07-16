@@ -7,4 +7,11 @@ cover: "/covers/invictus.jpg"   # optional
 tags: ["romance", "action", "weak to strong", "adventure", "kingdom building"]
 explicit: "true"
 date: "2026-07-08"
+lore_order:
+  - main
+  - mc
+  - harem
+  - side-characters
+  - world
+  - glossary
 ---
