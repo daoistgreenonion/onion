@@ -64,14 +64,27 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
   const fileContent = fs.readFileSync(metaPath, 'utf8')
   const { data } = matter(fileContent)
 
-  const chapterFiles = fs.readdirSync(workDir)
-    .filter(f => f.endsWith('.md') && f !== 'meta.md' && f !== 'chapters.md')
-    .sort()
+  // Look for chapters in a dedicated "chapters/" subfolder first
+  const chaptersFolder = path.join(workDir, 'chapters')
+  let chapterFiles: string[]
+
+  if (fs.existsSync(chaptersFolder)) {
+    chapterFiles = fs.readdirSync(chaptersFolder)
+      .filter(f => f.endsWith('.md') && f !== 'meta.md')
+      .sort()
+  } else {
+    // Fallback to old behavior: chapters are directly in the work directory
+    chapterFiles = fs.readdirSync(workDir)
+      .filter(f => f.endsWith('.md') && f !== 'meta.md')
+      .sort()
+  }
 
 
 
   let chapters: ChapterMeta[] = chapterFiles.map(file => {
-    const chapPath = path.join(workDir, file)
+    const chapPath = fs.existsSync(chaptersFolder)
+      ? path.join(chaptersFolder, file)
+      : path.join(workDir, file)
     const chapContent = fs.readFileSync(chapPath, 'utf8')
     const { data: chapData } = matter(chapContent)
     return {
@@ -82,7 +95,9 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
 
   // If no chapter files were found, look for chapters.md (used for external‑link novels)
   if (chapters.length === 0) {
-    const chaptersMetaPath = path.join(workDir, 'chapters.md')
+    const chaptersMetaPath = fs.existsSync(chaptersFolder)
+      ? path.join(chaptersFolder, 'chapters.md')
+      : path.join(workDir, 'chapters.md')
     if (fs.existsSync(chaptersMetaPath)) {
       const rawList = fs.readFileSync(chaptersMetaPath, 'utf8')
       const lines = rawList.split(/\r?\n/)
@@ -162,7 +177,12 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
 }
 
 export function getChapterContent(directory: string, workSlug: string, chapterSlug: string) {
-  const chapterPath = path.join(directory, workSlug, `${chapterSlug}.md`)
+  const workDir = path.join(directory, workSlug)
+  const chaptersFolder = path.join(workDir, 'chapters')
+  const chapterPath = fs.existsSync(chaptersFolder)
+    ? path.join(chaptersFolder, `${chapterSlug}.md`)
+    : path.join(workDir, `${chapterSlug}.md`)
+
   if (!fs.existsSync(chapterPath)) return null
   const fileContent = fs.readFileSync(chapterPath, 'utf8')
   const { data, content } = matter(fileContent)
@@ -178,8 +198,8 @@ export function getAllNovels(): NovelMeta[] {
 }
 
 export function getNovelBySlug(slug: string): NovelMeta | null {
-  return getWorkBySlug(longNovelsDir, slug, 'long-novel') ??
-         getWorkBySlug(shortNovelsDir, slug, 'short-novel')
+  return  getWorkBySlug(longNovelsDir, slug, 'long-novel') ??
+          getWorkBySlug(shortNovelsDir, slug, 'short-novel')
 }
 
 export function getNovelChapterContent(novelSlug: string, chapterSlug: string) {

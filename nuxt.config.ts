@@ -12,8 +12,10 @@ import path from 'node:path'
 
 // // Helper: get all chapter slugs for a given work directory
 // function getChapterSlugs(workDir: string): string[] {
-//   if (!fs.existsSync(workDir)) return []
-//   return fs.readdirSync(workDir)
+//   const chaptersFolder = path.join(workDir, 'chapters')
+//   const dir = fs.existsSync(chaptersFolder) ? chaptersFolder : workDir
+//   if (!fs.existsSync(dir)) return []
+//   return fs.readdirSync(dir)
 //     .filter(f => f.endsWith('.md') && f !== 'meta.md')
 //     .map(f => f.replace(/\.md$/, ''))
 // }
