@@ -26,7 +26,8 @@ export interface NovelMeta {
   lore?: ChapterMeta[]
   date?: string
   explicit?: boolean
-  // loreChapter?: string   // the slug of the chapter that unlocks this lore
+  loreChapter?: string   // the slug of the chapter that unlocks this lore
+  extraFiles?: ExtraFile[]
 }
 
 export interface AnthologyStory {
@@ -35,6 +36,13 @@ export interface AnthologyStory {
   synopsis: string
   parts: ChapterMeta[]
   isSingleFile: boolean
+}
+
+export interface ExtraFile {
+  slug: string
+  title?: string
+  content: string
+  [key: string]: any   // other frontmatter fields
 }
 
 // ---- directory paths ----
@@ -70,12 +78,12 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
 
   if (fs.existsSync(chaptersFolder)) {
     chapterFiles = fs.readdirSync(chaptersFolder)
-      .filter(f => f.endsWith('.md') && f !== 'meta.md')
+      .filter(f => f.endsWith('.md') && f !== 'meta.md' && f !== 'chapters.md')
       .sort()
   } else {
     // Fallback to old behavior: chapters are directly in the work directory
     chapterFiles = fs.readdirSync(workDir)
-      .filter(f => f.endsWith('.md') && f !== 'meta.md')
+      .filter(f => f.endsWith('.md') && f !== 'meta.md' && f !== 'chapters.md')
       .sort()
   }
 
@@ -122,8 +130,6 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
     }
   }
 
-  
-
   // lore
   const loreDir = path.join(workDir, 'lore')
   let lore: ChapterMeta[] = []
@@ -158,6 +164,33 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
     })
   }
 
+  // Extra files in the novel root (excluding meta.md, chapters.md, and any files already handled)
+  const extraFiles: ExtraFile[] = []
+  const knownSlugs = new Set([
+    ...chapters.map(ch => ch.slug),
+    ...(lore || []).map(l => l.slug),
+    'meta',
+  ])
+
+  // Only look in the main workDir, not in subfolders
+  const rootFiles = fs.readdirSync(workDir, { withFileTypes: true })
+  for (const entry of rootFiles) {
+    if (entry.isFile() && entry.name.endsWith('.md')) {
+      const slug = entry.name.replace(/\.md$/, '')
+      if (knownSlugs.has(slug)) continue   // skip chapters, lore entries, and meta
+      if (entry.name === 'chapters.md') continue
+
+      const filePath = path.join(workDir, entry.name)
+      const raw = fs.readFileSync(filePath, 'utf8')
+      const { data, content } = matter(raw)
+      extraFiles.push({
+        slug,
+        title: data.title || slug,
+        content,
+        ...data,
+      })
+    }
+  }
 
   return {
     slug,
@@ -173,6 +206,7 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
     lore: lore.length ? lore : undefined,
     explicit: data.explicit ?? false,
     date: data.date || null,
+    extraFiles: extraFiles.length ? extraFiles : undefined,
   }
 }
 
