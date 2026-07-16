@@ -31,20 +31,6 @@
         <!-- Explicit -->
         <p v-if="work.explicit" class="border border-red-500 text-red-500 text-[10px] w-min px-1 my-1">EXPLICIT</p>
       </div>
-      
-      <!-- Tags -->
-      <!-- <div class="grid grid-cols-[1fr,6fr] gap-y-2 my-3 text-sm sm:text-md">
-        <p class="mr-2 items-start font-bold">Status:</p>
-        <Tag :tag= work.status />
-        <p class="mr-2 items-start font-bold">Genre:</p>
-        <ul v-if="work.maintags" class="flex gap-2 ">
-          <li v-for="tag in work.maintags" :key="tag.slug">
-            <Tag 
-            :tag = tag
-            />
-          </li>
-        </ul>
-      </div> -->
     </div>
     
   </NuxtLink>

@@ -98,7 +98,7 @@
             </p>
           </div>
 
-          <!-- Children (visible when expanded) -->
+          <!-- Sub-entries (visible when expanded) -->
           <div v-if="expandedSlug === entry.slug" class="ml-6 space-y-1">
             <div v-for="(child, index) in entry.children" :key="child.slug" class="flex items-start gap-0.5">
               <!-- Tree line SVG (only if parent is expanded) -->
@@ -117,7 +117,7 @@
                 <line v-if="index !== entry.children.length - 1" x1="2" y1="10" x2="2" y2="20" />
               </svg>
 
-              <!-- Child entry button (unchanged) -->
+              <!-- Sub-entry button (unchanged) -->
               <button
                 v-if="isLoreUnlocked(child)"
                 @pointerdown.prevent="openEntry(child)"
@@ -130,18 +130,11 @@
               >
                 {{ child.title }}
               </button>
-              <!-- Locked child (unchanged) -->
-              <!-- <div v-else class="flex-1 px-2 py-1 rounded text-sm text-gray-400 dark:text-gray-600">
-                <span class="line-through">{{ child.title }}</span>
-                <p v-if="child.lockedMessage" class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                  Unlocked after {{ unlockChapterTitle(child) }}
-                </p>
-              </div> -->
             </div>
           </div>
         </div>
 
-        <!-- Flat entry (no children) -->
+        <!-- Flat entry (no sub-entries) -->
         <template v-else>
           <button
             v-if="isLoreUnlocked(entry)"
@@ -155,12 +148,6 @@
           >
             {{ entry.title }}
           </button>
-          <!-- <div v-else class="px-2 py-1 rounded text-sm text-gray-400 dark:text-gray-600">
-            <span class="line-through">{{ entry.title }}</span>
-            <p v-if="entry.lockedMessage" class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-              Unlocked after {{ unlockChapterTitle(entry) }}
-            </p>
-          </div> -->
         </template>
       </template>
     </div>

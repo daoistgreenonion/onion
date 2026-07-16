@@ -89,10 +89,20 @@
 
       <Collapsible title="...Lore" :open="true">
         <div>
+          <h4>Chapter Sensitive Lore</h4>
+          <p>
+            The most important part of the lore pages, is chapter-sensitive content. The main frustration I always had with publishing lore was spoilers, as well as revealing interesting information before it made sense in the context of the novel. I always thought that lore should be a tool to be able to remember things that you might have forgotten, not spoiling the fun of knowing what happens ahead. The lore on this website is sensitive to the chapter which it is viewed from (if you are viewing the lore from the reading page panel), and if you access lore directly through the novel/story page, you can input which chapter you are reading on to view lore which is adjusted to your current reading progress, with no fear of spoilers or seeing something that has not happened yet.
+          </p>
+          <p>
+            The chapter input on lore page is located at the bottom of the panel (same one as on reading page but with only lore functions). Just type in the chapter number you are on, and the lore contents will adjust.
+          </p>
+          <p>
+            This dynamic/progressive lore feature makes lore, in my opinion, a good companion to the reading.
+          </p>
+          <h4>Locating and Navigating Lore</h4>
           <p>
             Because lore is always tied to a specific story, there's no separate lore link in top-site navigation. Instead, you'll find the link to the lore of the specific novel in that novel's description.
           </p>
-          
           <p>
             And as I already explained above in "...Reading Page Functionality", it's also available directly on reading pages of that novel.
           </p>
@@ -100,8 +110,22 @@
           <p>
             On desktop, open the side panel and switch to the Lore tab to browse entries while the chapter stays visible beside you. On mobile, tap the floating button at the bottom‑right to bring up the bottom sheet and select the Lore tab. Tapping an entry opens it in a full‑screen overlay, keeping your reading spot safely preserved behind it.
           </p>
+          <h4>Searchable Lore Pages</h4>
+          <p>
+            Some of the lore entries are very long due to the very nature of their content (like the Side Characters page for example). Even though i try to keep such content in collapsible sections for convenience, it still can be hard to navigate. For that reason, I added a search bar above such pages, which filters the content for your convenience.
+          </p>
+        </div>
+      </Collapsible>
 
-          <p>But there is a far more important part of the lore pages, which is chapter-sensitive content. The main frustration I always had with publishing lore was spoilers, as well as revealing interesting information before it made sense in the context of the novel. I always thought that lore should be a tool to be able to remember things that you might have forgotten, not spoiling the fun of knowing what happens ahead. The lore on this website is sensitive to the chapter which it is viewed from (if you are viewing the lore from the reading page panel), and if you access lore directly through the novel/story page, you can specify which chapter you are reading on to view lore which is adjusted to your current reading, with no fear of spoilers or seeing something that has not happened yet.</p>
+      <Collapsible title="...Short Stories">
+        <div>
+          <p>
+            The good thing about having my own website is the freedom and ability to publish content in various formats, including one-off short stories with no chapters.
+          </p>
+          <h4>Navigating Short Stories</h4>
+          <p>
+            Because it takes a lot less time to write them, there likely will be far more short stories than .
+          </p>
         </div>
       </Collapsible>
 

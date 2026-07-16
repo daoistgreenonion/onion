@@ -30,31 +30,6 @@
         </div>
       </section>
   
-      <!-- <section className='flex justify-center items-center px-6 py-10'>
-        <article className='rounded-lg px-6 bg-gray-300 dark:bg-gray-800 py-10'>
-          <h2 className='text-lg font-bold'>Labels</h2>
-          <div className='flex gap-2 text-gray-50 items-center'>
-            <p className='bg-none border border-red-600 text-red-600 rounded sm:rounded-md uppercase w-min h-min px-0.5 text-[8px] sm:text-[10px] justify-center items-center'>18+</p>
-            <p>This tag is placed on explicit works, NSFW and not appropriate for those aged 17 and lower</p>
-          </div>
-        </article>
-      </section> -->
-  
-      <!-- Anthologies Section -->
-      <!-- <section v-if="homepageSections.anthologies?.length" class="px-4 md:px-2 lg:px-0">
-        <div class="flex justify-center items-baseline mb-8">
-          <NuxtLink to="/anthologies" class="text-brand-lightest hover:underline"><h2 class="text-3xl font-bold">Anthologies</h2></NuxtLink>
-        </div>
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <WorkCard
-            v-for="anthology in homepageSections.anthologies"
-            :key="anthology.slug"
-            :work="anthology"
-            :link="`/anthologies/${anthology.slug}`"
-          />
-        </div>
-      </section> -->
-  
       <!-- Short Stories Section -->
       <section v-if="homepageSections.shorts?.length" class="px-4 md:px-2 lg:px-4">
         <div class="flex justify-center items-baseline mb-8">

@@ -45,16 +45,22 @@
             <option v-for="tag in allMaintags" :key="tag" :value="tag">{{ tag }}</option>
           </select>
         </div>
-        <!-- Explicit -->
-        <!-- <div class="flex items-center gap-2">
-          <label for="show-explicit" class="text-sm text-gray-600 text-nowrap dark:text-gray-400">Show NSFW Only</label>
-          <input 
-            type="checkbox" 
-            name="show-explicit" 
-            id="show-explicit"
-            class="h-7 w-7 rounded-md"
-          >
-        </div> -->
+        
+        <!-- NSFW‑only toggle (desktop) -->
+        <button
+          v-if="explicitPreference === 'expanded'"
+          @pointerdown.prevent="showOnlyExplicit = !showOnlyExplicit"
+          :class="[
+            'px-3 py-1.5 text-sm rounded-md border transition-colors',
+            showOnlyExplicit
+              ? 'bg-brand text-white border-brand'
+              : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'
+          ]"
+          :aria-pressed="showOnlyExplicit"
+          aria-label="Show NSFW stories only"
+        >
+          NSFW
+        </button>
 
         <!-- Search -->
         <div class="flex items-center gap-2">
@@ -99,6 +105,22 @@
           <option v-for="tag in allMaintags" :key="tag" :value="tag">{{ tag }}</option>
         </select>
       </div>
+
+      <!-- NSFW‑only toggle (desktop) -->
+      <button
+      v-if="explicitPreference === 'expanded'"
+        @pointerdown.prevent="showOnlyExplicit = !showOnlyExplicit"
+        :class="[
+          'px-3 py-1.5 text-sm rounded-md border transition-colors',
+          showOnlyExplicit
+            ? 'bg-brand text-white border-brand'
+            : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'
+        ]"
+        :aria-pressed="showOnlyExplicit"
+        aria-label="Show NSFW stories only"
+      >
+        NSFW
+      </button>
 
       <!-- Search -->
         <div class="flex w-full items-center gap-2">
@@ -146,6 +168,7 @@ const currentSort = ref(route.query.sort || 'newest')
 const selectedMaintag = ref(route.query.maintag || 'all')
 const showControls = ref(false)
 const searchQuery = ref('')
+const showOnlyExplicit = ref(false)
 
 const { data: stories } = await useFetch('/api/shorts')
 
@@ -166,6 +189,11 @@ const allMaintags = computed(() => {
 const sortedStories = computed(() => {
   let list = stories.value || []
 
+  // 0. Global explicit preference – hide all explicit if collapsed
+  if (explicitPreference.value === 'collapsed') {
+    list = list.filter(s => !s.explicit)
+  }
+
   // 1. filter by selected genre (maintag)
   if (selectedMaintag.value !== 'all') {
     list = list.filter(s => (s.maintags || []).includes(selectedMaintag.value))
@@ -174,7 +202,12 @@ const sortedStories = computed(() => {
   // 2. filter explicit
   // if (s.explicit) list = list.filter(s => (s.explicit))
 
-  // 3. filter by search query (title, synopsis, tags)
+  // 3. filter by NSFW‑only toggle
+  if (showOnlyExplicit.value) {
+    if (explicitPreference.value === 'expanded') list = list.filter(s => s.explicit)
+  }
+
+  // 4. filter by search query (title, synopsis, tags)
   const query = searchQuery.value.trim().toLowerCase()
   if (query) {
     list = list.filter(s => {
@@ -188,7 +221,7 @@ const sortedStories = computed(() => {
     })
   }
 
-  // 4. sort
+  // 5. sort
   const sorted = [...list]
   if (currentSort.value === 'oldest') {
     sorted.sort((a, b) => (a.date ? new Date(a.date).getTime() : 0) - (b.date ? new Date(b.date).getTime() : 0))
