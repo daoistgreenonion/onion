@@ -1,11 +1,7 @@
 ---
-title: "Mages of Silvaris"
-lore_order:
-  - gunther
-  - baldur
-  - other
+title: "Baldur"
 ---
 
-This is about Mages of Silvaris
+This is about Baldur of Liveror
 
 Dolore in nulla ut tempor. Tempor quis magna commodo sit Lorem proident adipisicing esse commodo ut aliquip. Sunt voluptate consectetur nostrud aute irure deserunt. Officia dolore anim quis aliquip proident magna aute id ullamco fugiat irure.

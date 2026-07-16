@@ -185,6 +185,20 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
             }
           }
 
+          // Apply custom lore order for children, if provided in the parent meta.md
+          if (metaData.lore_order && Array.isArray(metaData.lore_order)) {
+            const childOrderMap = new Map<string, number>()
+            metaData.lore_order.forEach((slug: string, index: number) => {
+              childOrderMap.set(slug, index)
+            })
+
+            childEntries.sort((a, b) => {
+              const orderA = childOrderMap.has(a.slug) ? childOrderMap.get(a.slug)! : Infinity
+              const orderB = childOrderMap.has(b.slug) ? childOrderMap.get(b.slug)! : Infinity
+              return orderA - orderB
+            })
+          }
+
           // Add the parent entry with children
           flatEntries.push({
             slug: parentSlug,
