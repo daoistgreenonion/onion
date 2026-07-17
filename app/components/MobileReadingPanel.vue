@@ -1,10 +1,10 @@
 <template>
-  <div v-if="hasContent" class="sm:hidden">
+  <div v-if="hasContent || true" class="sm:hidden">
     <!-- FAB -->
     <button
       v-if="!modelValue"
       @pointerdown.prevent="$emit('update:modelValue', true)"
-      class="fixed bottom-6 right-6 z-40 w-12 h-12 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      class="fixed bottom-6 right-6 z-40 w-12 h-12 bg-white/70 dark:bg-gray-800/70  border border-gray-300 dark:border-gray-600 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
       style="touch-action: manipulation;"
       aria-label="Open reading navigation"
     >

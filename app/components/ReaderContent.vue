@@ -55,16 +55,22 @@
     <article :class="['prose prose-lg dark:prose-invert max-w-none [&_p]:my-4 [&_p]:leading-relaxed',  fontSizeClass]">
       <h1 class="mb-10 text-4xl drop-cap">{{ currentTitle }}</h1>
       <template v-for="(part, index) in contentParts" :key="index">
-        <div v-if="part.type === 'markdown'" v-html="part.html"></div>
-        <Collapsible
-          v-else-if="part.type === 'explicit'"
-          :title="part.title"
-          :open="explicitPreference === 'expanded'"
-          type="explicit"
-        >
-          <div v-html="part.html" />
-        </Collapsible>
-      </template>
+      <div v-if="part.type === 'markdown'" v-html="part.html" />
+      <Collapsible
+        v-else-if="part.type === 'explicit'"
+        :title="part.title"
+        :open="explicitPreference === 'expanded'"
+        type="explicit"
+      >
+        <div v-html="part.html" />
+      </Collapsible>
+      <Collapsible
+        v-else-if="part.type === 'collapsible'"
+        :title="part.title"
+      >
+        <div v-html="part.html" />
+      </Collapsible>
+    </template>
     </article>
 
     <!-- Prev/Next navigation (bottom) -->
@@ -116,6 +122,7 @@ const props = defineProps({
   workType: String,
   skipTargets: { type: Array, default: () => [] },
   explicitSections: { type: Array, default: () => [] },
+  collapsibleSections: { type: Array, default: () => [] },
 })
 
 
@@ -181,30 +188,69 @@ const fontSizeClass = computed(() => {
 
 const contentParts = computed(() => {
   const parts = []
-  const placeholderRegex = /<!--\s*explicit-placeholder-explicit-(\d+)\s*-->/g
+  // Collect all matches (both explicit and collapsible)
+  const matches = []
+
+  // Explicit placeholders
+  const explicitRegex = /<!--\s*explicit-placeholder-explicit-(\d+)\s*-->/g
+  let m
+  while ((m = explicitRegex.exec(props.content)) !== null) {
+    matches.push({
+      index: m.index,
+      end: m.index + m[0].length,
+      type: 'explicit',
+      id: parseInt(m[1]),
+    })
+  }
+
+  // Collapsible placeholders
+  const collapsibleRegex = /<!--\s*collapsible-placeholder-collapsible-(\d+)\s*-->/g
+  while ((m = collapsibleRegex.exec(props.content)) !== null) {
+    matches.push({
+      index: m.index,
+      end: m.index + m[0].length,
+      type: 'collapsible',
+      id: parseInt(m[1]),
+    })
+  }
+
+  // Sort by position in the content
+  matches.sort((a, b) => a.index - b.index)
+
   let lastIndex = 0
-  let match
-
-  while ((match = placeholderRegex.exec(props.content)) !== null) {
-    // Add markdown before placeholder
+  for (const match of matches) {
+    // Markdown before this placeholder
     if (match.index > lastIndex) {
-      parts.push({ type: 'markdown', html: md.render(props.content.slice(lastIndex, match.index)) })
+      parts.push({
+        type: 'markdown',
+        html: md.render(props.content.slice(lastIndex, match.index)),
+      })
     }
 
-    // Add explicit section
-    const id = parseInt(match[1])
-    const section = props.explicitSections[id]
-    if (section) {
-      parts.push({ type: 'explicit', title: "Title", html: section.html })
+    // The section itself
+    if (match.type === 'explicit') {
+      const section = props.explicitSections[match.id]
+      if (section) {
+        parts.push({ type: 'explicit', title: section.title, html: section.html })
+      }
+    } else if (match.type === 'collapsible') {
+      const section = props.collapsibleSections[match.id]
+      if (section) {
+        parts.push({ type: 'collapsible', title: section.title, html: section.html })
+      }
     }
-    lastIndex = match.index + match[0].length
+
+    lastIndex = match.end
   }
-  
-  // Remaining markdown
+
+  // Remaining markdown after the last placeholder
   if (lastIndex < props.content.length) {
-    parts.push({ type: 'markdown', html: md.render(props.content.slice(lastIndex)) })
+    parts.push({
+      type: 'markdown',
+      html: md.render(props.content.slice(lastIndex)),
+    })
   }
-  
+
   return parts
 })
 

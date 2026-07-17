@@ -26,7 +26,11 @@ export default defineEventHandler((event) => {
   const { processedContent: afterSkips, skipTargets } = extractSkipTargets(chapterData.content)
 
   // 2. process explicit sections (using a MarkdownIt instance)
-  const { cleanedContent, explicitSections }  = extractExplicitSections(afterSkips)
+  const { trueCleanedContent, explicitSections, collapsibleSections }  = extractExplicitSections(afterSkips)
+
+
+  // 3. process collapsible sections (using a MarkdownIt instance)
+  // const { cleanedContent, collapsibleSections }  = extractСollapsibleSections(afterExplicit)
 
   // 3. Process inline lore
   // … inside event handler, after explicitSections:
@@ -40,7 +44,7 @@ export default defineEventHandler((event) => {
 
   
   const contentWithLore = processInlineLore(
-    cleanedContent,            // content already processed for explicit/skips
+    trueCleanedContent,            // content already processed for explicit/skips
     novel.lore || [],
     novel.chapters,
     chapter,
@@ -62,5 +66,6 @@ export default defineEventHandler((event) => {
     workType: 'novels',
     skipTargets,
     explicitSections,
+    collapsibleSections,
   }
 })

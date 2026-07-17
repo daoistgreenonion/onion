@@ -12,7 +12,7 @@ export default defineEventHandler((event) => {
   const { processedContent: afterSkips, skipTargets } = extractSkipTargets(story.content)
 
   // 2. extract explicit sections (returns cleaned content + structured array)
-  const { cleanedContent, explicitSections } = extractExplicitSections(afterSkips)
+  const { trueCleanedContent, explicitSections, collapsibleSections } = extractExplicitSections(afterSkips)
 
   return {
     workTitle: story.title,
@@ -20,11 +20,12 @@ export default defineEventHandler((event) => {
     chapters: [],
     backLink: '/short-stories',
     chapterBasePath: '',
-    content: cleanedContent,           
+    content: trueCleanedContent,           
     lore: null,
     workSlug: slug,
     workType: 'short-stories',
     skipTargets,
-    explicitSections,                   
+    explicitSections, 
+    collapsibleSections,                  
   }
 })

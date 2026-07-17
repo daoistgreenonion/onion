@@ -1,5 +1,5 @@
 <template>
-  <template v-if="hasChapters || hasLore || skipTargets.length">
+  <template v-if="hasChapters || hasLore || skipTargets.length || true">
     <!-- Toggle button -->
     <button
       v-if="!modelValue"

@@ -5,6 +5,9 @@
       <p v-if="work.explicit" class="border border-red-500 text-red-500 text-[10px] w-min px-1 my-1">EXPLICIT</p>
     </div>
     <p class="text-xs text-gray-700 dark:text-gray-400">{{ new Date(work.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }}</p>
+    <p v-if="work.wordCount" class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+      {{ work.wordCount.toLocaleString() }} words · ~{{ work.readingTime }} min read
+    </p>
     <div v-if="work.maintags && work.tags" class="py-3 flex flex-wrap gap-2">
       <div v-for="tag in work.maintags">
         <Tag 

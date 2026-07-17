@@ -117,14 +117,13 @@
         </div>
       </Collapsible>
 
-      <Collapsible title="...Short Stories">
+      <Collapsible title="...Short Stories" :open="true">
         <div>
           <p>
             The good thing about having my own website is the freedom and ability to publish content in various formats, including one-off short stories with no chapters.
           </p>
-          <h4>Navigating Short Stories</h4>
           <p>
-            Because it takes a lot less time to write them, there likely will be far more short stories than .
+            Because it takes significantly less time to write them, there likely will be far more short stories than novels, so I added the sorting and filtering features.  
           </p>
         </div>
       </Collapsible>

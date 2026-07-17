@@ -74,7 +74,7 @@
     <!-- Lore list -->
     <div
       v-if="(activeTab === 'lore' || loreOnly) && hasLore"
-      class="flex-1 overflow-y-auto space-y-1"
+      class="flex-1 overflow-y-auto space-y-1 max-h-[50vh] min-h-[50vh] sm:max-h-none sm:min-h-none"
     >
       <template v-for="entry in loreSafe" :key="entry.slug">
         <!-- Parent entry (with children) -->

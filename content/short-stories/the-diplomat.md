@@ -65,6 +65,11 @@ Laughter fills the room, as he shakes his head.
 Fast?! We’ve been in this so-called “conference room” for five hours for Anor’s sake!
 
 
+[[collapsible: Try]]
+
+This is a collapsible
+
+[[/collapsible]]
 
 
 [[explicit: Title]]

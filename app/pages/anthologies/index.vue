@@ -1,6 +1,9 @@
 <template>
   <main class="max-w-4xl mx-auto py-12 px-4">
     <h1 class="text-4xl font-bold mb-8">Anthologies</h1>
+    <div>
+      <p>Nothing here for now</p>
+    </div>
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <WorkCard
         v-for="anthology in anthologies"

@@ -211,7 +211,7 @@ export function processCollapsibleAndExplicitLore(html: string, explicitPref: st
         iconHtml = `<span class="collapsible-icon">${initiallyOpen ? '−' : '+'}</span>`
       }
 
-      const blockHtml = `<div class="collapsible-section ${sectionClass} ${initiallyOpen ? 'open' : ''} border border-gray-200 dark:border-gray-700 rounded-lg my-4">
+      const blockHtml = `<div class="collapsible-section lore-collapsible ${sectionClass} ${initiallyOpen ? 'open' : ''} border border-gray-200 dark:border-gray-700 rounded-lg my-4">
         <button class="collapsible-toggle flex items-start justify-between gap-2 text-lg font-semibold text-brand-lightest w-full hover:bg-gray-200/50 dark:hover:bg-gray-600/50 p-4"
                 aria-expanded="${initiallyOpen ? 'true' : 'false'}"
                 onclick="const section=this.closest('.collapsible-section');section.classList.toggle('open');this.setAttribute('aria-expanded',section.classList.contains('open'))">

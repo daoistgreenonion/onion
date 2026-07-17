@@ -30,6 +30,8 @@ export interface NovelMeta {
   explicit?: boolean
   loreChapter?: string   // the slug of the chapter that unlocks this lore
   extraFiles?: ExtraFile[]
+  wordCount?: number
+  readingTime?: number   // in minutes
 }
 
 export interface AnthologyStory {
@@ -398,7 +400,10 @@ export function getAllShortStories(): NovelMeta[] {
     const slug = f.replace(/\.md$/, '')
     const filePath = path.join(shortStoriesDir, f)
     const raw = fs.readFileSync(filePath, 'utf8')
-    const { data } = matter(raw)
+    const { data, content } = matter(raw)
+    const words = (content || '').trim().split(/\s+/).length
+    const wordCount = words
+    const readingTime = Math.max(1, Math.ceil(words / 200))
     return {
       slug,
       title: data.title,
@@ -411,6 +416,8 @@ export function getAllShortStories(): NovelMeta[] {
       type: 'short-story' as const,
       date: data.date || null,
       explicit: data.explicit ?? false,
+      wordCount,
+      readingTime,
     }
   })
 }

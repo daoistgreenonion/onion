@@ -120,12 +120,16 @@ export function extractSkipTargets(content: string): {
  * Returns cleaned content with placeholders and an array of structured sections.
  */
 export function extractExplicitSections(content: string): {
-  cleanedContent: string
+  trueCleanedContent: string
   explicitSections: { title: string; html: string } []
+  collapsibleSections: { title: string; html: string } []
 } {
   const explicitSections: { title: string; html: string }[] = []
   const regex = /\[\[explicit:(.+?)\]\]\s*([\s\S]*?)\[\[\/explicit\]\]/g
   let counter = 0
+  const collapsibleSections: { title: string; html: string }[] = []
+  const regexCol = /\[\[collapsible:(.+?)\]\]\s*([\s\S]*?)\[\[\/collapsible\]\]/g
+  let counterCol = 0
 
   const cleanedContent = content.replace(regex, (_match, title, innerContent) => {
     const id = `explicit-${counter++}`
@@ -135,6 +139,15 @@ export function extractExplicitSections(content: string): {
     explicitSections.push({ title: title.trim(), html: renderedHtml })
     return `<!-- explicit-placeholder-${id} -->` // placeholder to keep position
   })
+  const trueCleanedContent = cleanedContent.replace(regexCol, (_match, title, innerContent) => {
+    const id = `collapsible-${counterCol++}`
+    // Render inner markdown with proper image handling
+    const md = createMarkdownIt()
+    const renderedHtml = md.render(innerContent.trim())
+    collapsibleSections.push({ title: title.trim(), html: renderedHtml })
+    return `<!-- collapsible-placeholder-${id} -->` // placeholder to keep position
+  })
 
-  return { cleanedContent, explicitSections }
+  return { trueCleanedContent, explicitSections, collapsibleSections }
 }
+

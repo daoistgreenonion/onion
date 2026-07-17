@@ -59,7 +59,7 @@
           :aria-pressed="showOnlyExplicit"
           aria-label="Show NSFW stories only"
         >
-          NSFW
+          NSFW only
         </button>
 
         <!-- Search -->
