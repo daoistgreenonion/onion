@@ -1,6 +1,7 @@
 ---
 title: Dynasties & Influential Families
 chapter: "30"
+sunset: "50"
 ---
 
 [[collapsible: 👑 Song Dynasty]]

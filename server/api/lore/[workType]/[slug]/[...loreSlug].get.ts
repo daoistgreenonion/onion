@@ -23,7 +23,7 @@ export default defineEventHandler((event) => {
 
   let workDir = ''
   let chapters: { slug: string }[] = []
-  let loreMeta: { title: string; loreChapter?: string; explicit?: boolean } | null = null
+  let loreMeta: { title: string; loreChapter?: string; explicit?: boolean; loreSunset?: string | number } | null = null
 
   if (workType === 'novels') {
     const novel = getNovelBySlug(slug)
@@ -64,7 +64,24 @@ export default defineEventHandler((event) => {
     }
   }
 
-  
+  // Full‑sunset check: if a loreSunset is set and the current chapter is past it
+  if (loreMeta?.loreSunset && chapterSlug) {
+    const sunsetNum = parseInt(String(loreMeta.loreSunset), 10)
+    const currentNum = getChapterNumber(chapterSlug)
+    if (!isNaN(sunsetNum) && currentNum !== null) {
+      const requiredIndex = chapters.findIndex(ch => getChapterNumber(ch.slug) === sunsetNum)
+      const currentIndex = chapters.findIndex(ch => getChapterNumber(ch.slug) === currentNum)
+      if (requiredIndex !== -1 && currentIndex >= requiredIndex) {
+        return {
+          title: loreMeta.title,
+          content: `<p class="text-red-500">This lore entry has sunset after chapter "${loreMeta.loreSunset}".</p>`,
+          searchable: false,
+          searchMode: 'title',
+        }
+      }
+    }
+  }
+
   const lore = getLoreContent(workDir, loreSlug)
   if (!lore) throw createError({ statusCode: 404, statusMessage: 'Lore not found' })
 

@@ -91,46 +91,41 @@
           >
             {{ entry.title }}
           </button>
-          <div v-else class="px-2 py-1 rounded text-sm text-gray-400 dark:text-gray-600">
-            <span class="line-through">{{ entry.title }}</span>
-            <p v-if="entry.lockedMessage" class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-              Unlocked after {{ unlockChapterTitle(entry) }}
-            </p>
-          </div>
 
           <!-- Sub-entries (visible when expanded) -->
-          <div v-if="expandedSlug === entry.slug" class="ml-6 space-y-1">
+          <div v-if="expandedSlug === entry.slug" class="ml-4">
             <div v-for="(child, index) in entry.children" :key="child.slug" class="flex items-start gap-0.5">
-              <!-- Tree line SVG (only if parent is expanded) -->
-              <svg
-                v-if="expandedSlug === entry.slug"
-                class="w-4 h-5 mt-0.5 flex-shrink-0 text-gray-400 dark:text-gray-600"
-                viewBox="0 0 16 20"
-                fill="none"
-                stroke="currentColor"
-              >
-                <!-- Vertical stem (from top to mid) -->
-                <line x1="2" y1="0" x2="2" y2="10" />
-                <!-- Horizontal branch -->
-                <line x1="2" y1="10" x2="10" y2="10" />
-                <!-- Vertical continuation (only if not last child) -->
-                <line v-if="index !== entry.children.length - 1" x1="2" y1="10" x2="2" y2="20" />
-              </svg>
-
-              <!-- Sub-entry button (unchanged) -->
               <button
                 v-if="isLoreUnlocked(child)"
                 @pointerdown.prevent="openEntry(child)"
                 :class="[
-                  'flex-1 text-left px-2 py-1 rounded text-sm',
+                  'flex text-left px-2 rounded text-sm',
                   child.slug === selectedLoreSlug
                     ? 'bg-brand-light/20 text-brand-light'
                     : 'hover:bg-gray-100 dark:hover:bg-gray-800'
                 ]"
               >
+                <svg
+                  v-if="expandedSlug === entry.slug"
+                  class="w-4 h-5 mt-0.5 text-gray-400 dark:text-gray-600"
+                  viewBox="0 0 16 20"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <line x1="2" y1="0" x2="2" y2="10" />
+                  <line x1="2" y1="10" x2="10" y2="10" />
+
+                  <!-- Vertical continuation only if NOT last visible unlocked child -->
+                  <line
+                    v-if="!isLastVisibleChild(entry, index)"
+                    x1="2" y1="10" x2="2" y2="20"
+                  />
+                </svg>
+
                 {{ child.title }}
               </button>
             </div>
+
           </div>
         </div>
 
@@ -261,11 +256,19 @@ const currentChapterIndex = computed(() => {
 })
 
 const isLoreUnlocked = (entry) => {
+  if (isSunset(entry)) return false
   if (!entry.loreChapter) return true
-  // entry.loreChapter can be a number or a string like "5"
-  const requiredNum = parseInt(entry.loreChapter, 10)
-  if (isNaN(requiredNum)) return false
+  const requiredNum = getChapterNum(entry.loreChapter)
+  if (requiredNum === null) return false
   return requiredNum - 1 <= currentChapterIndex.value
+}
+
+const isSunset = (entry) => {
+  if (!entry.loreSunset || !props.loreChapterSlug) return false
+  const sunsetNum = parseInt(entry.loreSunset, 10)
+  if (isNaN(sunsetNum)) return false
+  // currentChapterIndex is already computed (0‑based)
+  return currentChapterIndex.value >= sunsetNum - 1
 }
 
 const filteredLore = computed(() => {
@@ -325,5 +328,13 @@ function openEntry(entry) {
   const path = entry.parentPath || entry.slug
   emit('loreOpen', `/embed-lore/${props.workType}/${props.workSlug}/${path}`)
 }
+
+
+function isLastVisibleChild(entry, index) {
+  const children = entry.children || []
+  return !children.slice(index + 1).some(c => isLoreUnlocked(c))
+}
+
+
 
 </script>

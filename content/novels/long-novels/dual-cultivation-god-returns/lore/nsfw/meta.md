@@ -1,6 +1,8 @@
 ---
 title: "NSFW"
 explicit: true
+lore_order:
+ - nsfw-pictures
 ---
 
 

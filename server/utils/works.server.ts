@@ -8,6 +8,7 @@ export interface ChapterMeta {
   loreChapter?: string   // the slug of the chapter that unlocks this lore
   lockedMessage?: boolean
   explicit?: boolean   // ← new
+  loreSunset?: string | number   // chapter after which this lore is no longer available
   children?: ChapterMeta[]   // sub-entries inside a folder
   parentPath?: string
 }
@@ -155,6 +156,7 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
           lockedMessage: fData.locked_message ?? false,
           explicit: fData.explicit ?? false,
           children: undefined,
+          loreSunset: fData.sunset ?? undefined,
         })
       } else if (entry.isDirectory()) {
         // Folder – check if it contains meta.md
@@ -183,6 +185,7 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
                 explicit: childData.explicit ?? false,
                 parentPath: parentSlug + '/' + childSlug, 
                 children: undefined,
+                loreSunset: childData.sunset ?? undefined,
               })
             }
           }
@@ -209,6 +212,7 @@ function getWorkBySlug(directory: string, slug: string, type: WorkType): NovelMe
             lockedMessage: metaData.locked_message ?? false,
             explicit: metaData.explicit ?? false,
             children: childEntries.length ? childEntries : undefined,
+            loreSunset: metaData.sunset ?? undefined,
           })
         }
       }
@@ -487,6 +491,7 @@ export function getLoreContent(workDir: string, loreSlug: string) {
       searchable: data.searchable ?? false,
       searchMode: data.search_mode || 'title',
       explicit: data.explicit ?? false,
+      loreSunset: data.loreSunset ?? false,
     }
   }
 
@@ -502,6 +507,7 @@ export function getLoreContent(workDir: string, loreSlug: string) {
       searchable: data.searchable ?? false,
       searchMode: data.search_mode || 'title',
       explicit: data.explicit ?? false,
+      loreSunset: data.loreSunset ?? false,
     }
   }
 

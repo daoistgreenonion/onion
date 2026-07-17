@@ -1,5 +1,8 @@
 ---
 title: "Secret Realms"
+lore_order:
+- blue-moon
+- sun-shadow
 ---
 
 This is about Secret Realms

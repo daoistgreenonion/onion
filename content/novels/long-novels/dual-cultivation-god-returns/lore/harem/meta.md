@@ -1,5 +1,15 @@
 ---
 title: Harem Members
+lore_order:
+ - ye-ling
+ - hua-ziyan
+ - feng-yi
+ - luo-mingyu
+ - shen-min
+ - wei-lan
+ - cao-xiang
+ - cao-mei
+ - 
 ---
 
 

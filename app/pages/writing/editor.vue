@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen min-h-screen flex flex-col max-w-4xl mx-auto">
+  <div class="h-[900px] flex flex-col max-w-4xl mx-auto">
     <!-- Toolbar -->
     <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
       <div class="flex items-center gap-4">
@@ -40,6 +40,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'writer',
+})
+
 const STORAGE_KEY = 'markdown-draft'
 
 const source = ref('')
