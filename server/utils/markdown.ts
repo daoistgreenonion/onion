@@ -70,6 +70,33 @@ export function createMarkdownIt(): MarkdownIt {
     return `<span class="${wrapperClass}">${imgTag}${captionHtml}${sourceHtml}</span>`
   }
 
+   md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+    const token = tokens[idx]
+    if (!token) return self.renderToken(tokens, idx, options)
+
+    const href = token.attrGet('href') || ''
+
+    // Detect lore links and add class + data attribute
+    if (href.startsWith('/embed-lore/') || href.startsWith('/lore/')) {
+      token.attrSet('class', 'lore-link')
+      const parts = href.split('/')
+      const loreSlug = parts.slice(4).join('/')   // everything after /embed-lore/workType/slug/
+      if (loreSlug) {
+        token.attrSet('data-lore-slug', loreSlug)
+      }
+    }
+
+    // External links open in new tab, internal links break out of iframe
+    if (href.startsWith('http')) {
+      token.attrSet('target', '_blank')
+      token.attrSet('rel', 'noopener noreferrer')
+    } else {
+      token.attrSet('target', '_parent')
+    }
+
+    return self.renderToken(tokens, idx, options)
+  }
+
   return md
 }
 

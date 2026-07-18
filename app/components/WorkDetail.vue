@@ -7,7 +7,7 @@
     <section class="grid grid-cols-1 sm:grid-cols-[4fr,5fr]">
       <!-- Right-Side Cover Image (full on mobile) -->
       <div class="w-full">
-        <img 
+        <NuxtImg 
           :src="work.cover" 
           :alt="work.title" 
           class="w-full"

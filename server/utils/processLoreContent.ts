@@ -192,6 +192,7 @@ export function processCollapsibleAndExplicitLore(html: string, explicitPref: st
       const isExplicit = entry.type === 'explicit'
       const initiallyOpen = isExplicit && explicitPref === 'expanded'
       const sectionClass = isExplicit ? 'explicit-section' : ''
+      const sectionId = slugify(safeTitle) || 'section'
 
       let iconHtml = ''
       if (isExplicit) {
@@ -210,8 +211,8 @@ export function processCollapsibleAndExplicitLore(html: string, explicitPref: st
       } else {
         iconHtml = `<span class="collapsible-icon">${initiallyOpen ? '−' : '+'}</span>`
       }
-
-      const blockHtml = `<div class="collapsible-section lore-collapsible ${sectionClass} ${initiallyOpen ? 'open' : ''} border border-gray-200 dark:border-gray-700 rounded-lg my-4">
+      
+      const blockHtml = `<div  id="${sectionId}"  class="collapsible-section lore-collapsible ${sectionClass} ${initiallyOpen ? 'open' : ''} border border-gray-200 dark:border-gray-700 rounded-lg my-4">
         <button class="collapsible-toggle flex items-start justify-between gap-2 text-lg font-semibold text-brand-lightest w-full hover:bg-gray-200/50 dark:hover:bg-gray-600/50 p-4"
                 aria-expanded="${initiallyOpen ? 'true' : 'false'}"
                 onclick="const section=this.closest('.collapsible-section');section.classList.toggle('open');this.setAttribute('aria-expanded',section.classList.contains('open'))">
@@ -251,4 +252,43 @@ export function processCollapsibleAndExplicitLore(html: string, explicitPref: st
   }
 
   return output
+}
+
+
+/**
+ * Process NSFW blocks – completely remove content when explicit preference is collapsed.
+ * Markers are expected to be on their own lines and thus wrapped in <p> tags by markdown‑it.
+ */
+// export function processNsfwBlocks(html: string, explicitPref: string): string {
+//   if (explicitPref === 'expanded') {
+//     // Remove the markers but keep the content
+//     return html
+//       .replace(/<p>\s*\[\[nsfw\]\]\s*<\/p>/gi, '')
+//       .replace(/<p>\s*\[\[\/nsfw\]\]\s*<\/p>/gi, '')
+//   }
+
+//   // Collapsed – remove the markers and everything between them
+//   return html.replace(
+//     /<p>\s*\[\[nsfw\]\]\s*<\/p>([\s\S]*?)<p>\s*\[\[\/nsfw\]\]\s*<\/p>/gi,
+//     ''
+//   )
+// }
+
+export function processNsfwBlocks(rawContent: string, explicitPref: string): string {
+  if (explicitPref === 'expanded') {
+    // Keep content, remove markers (both must be on their own lines)
+    return rawContent
+      .replace(/^\[\[nsfw\]\]\s*$/gm, '')
+      .replace(/^\[\[\/nsfw\]\]\s*$/gm, '')
+  }
+
+  // Collapsed – remove markers and everything between them
+  return rawContent.replace(/^\[\[nsfw\]\][\s\S]*?^\[\[\/nsfw\]\]\s*$/gm, '')
+}
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
 }

@@ -20,6 +20,7 @@
         class="w-full h-full border-0 bg-white dark:bg-gray-900"
         title="Lore"
         sandbox="allow-scripts allow-same-origin"
+        @load="onIframeLoad"
       />
     </div>
 
@@ -36,14 +37,6 @@
           </svg>
         </button>
         <div v-if="open && loreUrl" class="...">
-          <!-- Back button (only on desktop panel, could also be on mobile) -->
-          <div v-if="hasHistory" class="absolute top-4 left-4 z-10">
-            <button @pointerdown.prevent="$emit('back')" class="p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-          </div>
           <!-- existing close button and iframe -->
         </div>
         <iframe
@@ -51,6 +44,7 @@
           class="w-full h-full border-0 bg-white dark:bg-gray-900"
           title="Lore"
           sandbox="allow-scripts allow-same-origin"
+          @load="onIframeLoad"
         />
       </div>
     </div>
@@ -58,10 +52,38 @@
 </template>
 
 <script setup>
+import { watch, nextTick } from 'vue'
+
 const props = defineProps({
   loreUrl: String,
   open: Boolean,
 })
 
 const emit = defineEmits(['close'])
+
+
+// Scroll the iframe to the anchor
+function scrollIframeToHash() {
+  if (!props.loreUrl) return
+  const hash = new URL(props.loreUrl, 'http://localhost').hash
+  if (!hash) return
+  const iframe = document.querySelector('.lore-iframe') || document.querySelector('iframe[title="Lore"]')
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage({ type: 'scroll-to', hash }, '*')
+  }
+}
+
+function onIframeReady(event) {
+  if (event.data?.type === 'lore-iframe-ready') {
+    scrollIframeToHash()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('message', onIframeReady)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('message', onIframeReady)
+})
 </script>

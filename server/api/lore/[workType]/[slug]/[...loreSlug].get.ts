@@ -1,5 +1,5 @@
 import { getNovelBySlug, getAnthologyBySlug, getLoreContent, getAnthologyStories } from '../../../../utils/works.server'
-import { processLoreContent, processCollapsibleAndExplicitLore } from '../../../../utils/processLoreContent'
+import { processLoreContent, processCollapsibleAndExplicitLore, processNsfwBlocks } from '../../../../utils/processLoreContent'
 import { createMarkdownItInstance } from '../../../../utils/markdownRenderer'
 import path from 'path'
 
@@ -94,11 +94,17 @@ export default defineEventHandler((event) => {
     }
   }
 
-  const finalContent = processLoreContent(lore.content, chapters.length, currentChapterIndex)
+  const postNSFW = processNsfwBlocks(lore.content, explicitPref)
+
+  const finalContent = processLoreContent(postNSFW, chapters.length, currentChapterIndex)
 
   const md = createMarkdownItInstance()
   
   const html = md.render(finalContent)
+
+  // 1. NSFW blocks – remove entirely when collapsed
+  // html = processNsfwBlocks(html, explicitPref)
+
   const finalHtml = processCollapsibleAndExplicitLore(html, explicitPref)
 
   return {

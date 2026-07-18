@@ -1,6 +1,7 @@
 // utils/markdownRenderer.js
 import MarkdownIt from 'markdown-it'
 
+
 // Helper to escape HTML (for image alt text, etc.)
 function escapeHtml(text) {
   return text
@@ -81,6 +82,36 @@ export function createMarkdownItInstance() {
     }
 
     return `<span class="${wrapperClass}">${imgTag}${captionHtml}${sourceHtml}</span>`
+  }
+
+  md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+    const token = tokens[idx]
+    if (!token) return self.renderToken(tokens, idx, options)
+
+    const href = token.attrGet('href') || ''
+
+    // Detect lore links and add class + data attribute
+    if (href.startsWith('/embed-lore/') || href.startsWith('/lore/')) {
+      token.attrSet('class', 'lore-link')
+      const url = new URL(href, 'http://localhost:3000')   // base to make relative path absolute
+      let loreSlug = url.pathname.replace(/^\//, '')
+      // Remove the leading segments up to the work slug
+      const parts = loreSlug.split('/')
+      // We want everything after the workSlug (4th segment: 1=embed-lore, 2=workType, 3=slug, 4+ = lore path)
+      loreSlug = parts.slice(3).join('/')
+      if (url.hash) loreSlug += url.hash
+      token.attrSet('data-lore-slug', loreSlug)
+    }
+
+    // External links open in new tab, internal links break out of iframe
+    if (href.startsWith('http')) {
+      token.attrSet('target', '_blank')
+      token.attrSet('rel', 'noopener noreferrer')
+    } else {
+      token.attrSet('target', '_parent')
+    }
+
+    return self.renderToken(tokens, idx, options)
   }
 
   return md

@@ -2,6 +2,7 @@
 import MarkdownIt from 'markdown-it'
 
 
+
 // Helper to escape HTML (for image alt text, etc.)
 function escapeHtml(text:string) :string {
   return text
@@ -88,35 +89,35 @@ export function createMarkdownItInstance() {
     return `<span class="${wrapperClass}">${imgTag}${captionHtml}${sourceHtml}</span>`
   }
 
-  // Detect lore links and add inline onclick handler
   md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
-  const token = tokens[idx]
-  if (!token) return self.renderToken(tokens, idx, options)
+    const token = tokens[idx]
+    if (!token) return self.renderToken(tokens, idx, options)
 
-  const href = token.attrGet('href') || ''
+    const href = token.attrGet('href') || ''
 
-  // Lore link → add onclick handler and replace href with #
-  if (href.startsWith('/embed-lore/') || href.startsWith('/lore/')) {
-    const parts = href.split('/')
-    const loreSlug = parts.slice(4).join('/')   // everything after /embed-lore/workType/slug/
-    if (loreSlug) {
-      token.attrSet('onclick', `window.parent.postMessage({type:'navigate-lore',loreSlug:'${loreSlug}'},'*'); return false;`)
-      token.attrSet('style', 'cursor:pointer;')
-      token.attrSet('href', '#')
+    // Detect lore links and add class + data attribute
+    if (href.startsWith('/embed-lore/') || href.startsWith('/lore/')) {
+      token.attrSet('class', 'lore-link')
+      const url = new URL(href, 'http://localhost:3000')   // base to make relative path absolute
+      let loreSlug = url.pathname.replace(/^\//, '')
+      // Remove the leading segments up to the work slug
+      const parts = loreSlug.split('/')
+      // We want everything after the workSlug (4th segment: 1=embed-lore, 2=workType, 3=slug, 4+ = lore path)
+      loreSlug = parts.slice(3).join('/')
+      if (url.hash) loreSlug += url.hash
+      token.attrSet('data-lore-slug', loreSlug)
     }
-  } else {
-    // External links → new tab
+
+    // External links open in new tab, internal links break out of iframe
     if (href.startsWith('http')) {
       token.attrSet('target', '_blank')
       token.attrSet('rel', 'noopener noreferrer')
     } else {
-      // Internal links → break out of iframe
       token.attrSet('target', '_parent')
     }
-  }
 
-  return self.renderToken(tokens, idx, options)
-}
+    return self.renderToken(tokens, idx, options)
+  }
 
   return md
 }

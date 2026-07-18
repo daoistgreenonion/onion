@@ -5,7 +5,7 @@
     <div class="w-full">
       <!-- Cover image with zoom on hover -->
       <div v-if="work.cover" class="w-full overflow-hidden hover:shadow-lg dark:hover:shadow-dark4 dark:hover:shadow-[0_0_40px_2px] transition-shadow">
-        <img
+        <NuxtImg
           :src="work.cover"
           :alt="work.title"
           class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"

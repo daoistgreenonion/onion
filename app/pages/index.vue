@@ -1,9 +1,10 @@
 <template>
-  <main class="max-w-5xl mx-auto">
+  <HomeSkeleton v-if="!isLoaded" />
+  <main v-else class="max-w-5xl mx-auto">
     <!-- Hero Section -->
     <div class="w-full">
-      <img src="/images/floatingmist.png" class="w-full dark:hidden" alt="floatingmist">
-      <img src="/images/floatingmistdark.png" class="w-full hidden dark:flex" alt="floatingmist">
+      <NuxtImg src="/images/floatingmist.png" class="w-full dark:hidden" alt="floatingmist" loading="lazy"/>
+      <NuxtImg src="/images/floatingmistdark.png" class="w-full hidden dark:flex" alt="floatingmist" loading="lazy"/>
     </div>
 
     <div class="w-full my-12">
@@ -106,10 +107,10 @@
 </template>
 
 <script setup>
-
 definePageMeta({
   layout: 'home',
 })
+const isLoaded = ref(false)
 
 // ---- Fetch all data from API endpoints ----
 const { data: novelsRaw }   = await useFetch('/api/novels')
@@ -130,4 +131,6 @@ const homepageSections = computed(() => ({
     .sort((a, b) => (b.date ? new Date(b.date).getTime() : 0) - (a.date ? new Date(a.date).getTime() : 0)).slice(0, 3),
   news: (newsRaw.value ?? []).slice(0, 5),
 }))
+
+isLoaded.value = true
 </script>

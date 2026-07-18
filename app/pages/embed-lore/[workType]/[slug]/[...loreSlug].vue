@@ -1,7 +1,7 @@
 <template>
   <div v-if="lore" class="w-full h-full">
     <!-- Search toggle & input (only if searchable) -->
-    <div v-if="lore.searchable" class="relative flex items-center">
+    <div v-if="lore.searchable" class="flex items-center fixed top-0 left-0">
       <svg class="w-5 h-5 m-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
@@ -96,6 +96,37 @@ function performSearch() {
 // When lore content updates, re-run search
 watch(() => lore.value?.content, () => {
   nextTick(() => performSearch())
+})
+
+// Intercept lore link clicks and send message to parent
+onMounted(() => {
+  document.addEventListener('click', (e) => {
+    const link = (e.target).closest('.lore-link')
+    if (!link) return
+    e.preventDefault()
+    const slug = link.dataset.loreSlug
+    if (slug) {
+      window.parent.postMessage({ type: 'navigate-lore', loreSlug: slug }, '*')
+    }
+  })
+  // window.addEventListener('message', (event) => {
+  //   console.log('Embed page received message:', event.data)
+  //   if (event.data?.type === 'scroll-to' && event.data.hash) {
+  //     console.log('scrollIframeToHash', event.data.hash)
+  //     const tryScroll = (attempts = 0) => {
+  //       const el = document.querySelector(event.data.hash)
+  //       if (el) {
+  //         el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  //       } else if (attempts < 5) {
+  //         // Retry after a short delay if the element isn't found yet
+  //         setTimeout(() => tryScroll(attempts + 1), 100)
+  //       }
+  //     }
+  //     tryScroll()
+  //   }
+  // })
+  console.log('Embed page: sending lore-iframe-ready')
+  window.parent.postMessage({ type: 'lore-iframe-ready' }, '*')
 })
 
 

@@ -52,7 +52,10 @@
     </nav>
     <div v-else class="h-10"></div>
 
-    <article :class="['prose prose-lg dark:prose-invert max-w-none [&_p]:my-4 [&_p]:leading-relaxed',  fontSizeClass]">
+    <article
+      :class="['prose prose-lg dark:prose-invert max-w-none [&_p]:my-4 [&_p]:leading-relaxed', fontSizeClass]"
+      @click="onArticleClick"
+    >
       <h1 class="mb-10 text-4xl drop-cap">{{ currentTitle }}</h1>
       <template v-for="(part, index) in contentParts" :key="index">
       <div v-if="part.type === 'markdown'" v-html="part.html" />
@@ -90,9 +93,7 @@
   <LoreOverlay
     :lore-url="loreUrl"
     :open="loreOpen"
-    :has-history="loreHistory.length > 0"
     @close="closeLoreOverlay"
-    @back="goBackLore"
   />
 </template>
 
@@ -147,23 +148,55 @@ const showNavigation = computed(() => props.chapters.length > 1)
 
 const selectedLoreSlug = ref('')
 
+// function onLoreLinkClick(event) {
+//   const link = event.target.closest('.lore-link')
+//   if (!link) return
+//   event.preventDefault()
+//   event.stopImmediatePropagation()
+//   // Use the absolute URL including the hash
+//   const fullUrl = link.href   // this is the full http://... URL, browser will include the hash
+//   openLoreOverlay(fullUrl)
+// }
+
 function openLoreOverlay(url) {
-  // url is like `/embed-lore/novels/slug/loreSlug`
-  const basePath = `/embed-lore/${props.workType}/${props.workSlug}/`
-  const fullSlug = url.startsWith(basePath) ? url.slice(basePath.length) : url.split('/').pop()
-  if (selectedLoreSlug.value) {
-    loreHistory.value.push(selectedLoreSlug.value)
+  let cleanPath, hash
+  const workSlug = props.workSlug || route.params.slug
+  const workType = props.workType || 'novels'
+  // then use these instead of props.xxx
+
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    // Absolute URL – from lore link click
+    const u = new URL(url)
+    cleanPath = u.pathname
+    hash = u.hash
+  } else {
+    // Relative path – from reading panel or other internal use
+    const [pathPart, hashPart] = url.split('#')
+    cleanPath = pathPart
+    hash = hashPart ? '#' + hashPart : ''
   }
-  selectedLoreSlug.value = fullSlug
+
+  const basePath = `/embed-lore/${workType}/${workSlug}/`
+  const fullSlug = cleanPath.startsWith(basePath)
+    ? cleanPath.slice(basePath.length)
+    : cleanPath.split('/').pop()
 
   const params = new URLSearchParams({
     chapter: props.currentSlug || '',
-    explicit: explicitPreference.value,  // ← .value!
+    explicit: explicitPreference.value,
   })
-  const fullUrl = `${url}?${params.toString()}`
-  loreUrl.value = fullUrl
+  const overlayUrl = `${cleanPath}?${params.toString()}${hash}`
+
+  // Update history
+  if (selectedLoreSlug.value) {
+    loreHistory.value.push(selectedLoreSlug.value)
+  }
+  selectedLoreSlug.value = fullSlug + (hash || '')
+
+  loreUrl.value = overlayUrl
   loreOpen.value = true
 }
+
 function closeLoreOverlay() {
   loreOpen.value = false
   loreUrl.value = null
@@ -295,7 +328,9 @@ function onLoreMessage(event) {
         loreUrl.value = prevUrl
       }
     } else {
-      const newUrl = `/embed-lore/${workType}/${workSlug}/${event.data.loreSlug}?${params.toString()}`
+      const [slugPart, hashPart] = event.data.loreSlug.split('#')
+      const hash = hashPart ? '#' + hashPart : ''
+      const newUrl = `/embed-lore/${workType}/${workSlug}/${slugPart}?${params.toString()}${hash}`
       if (loreUrl.value) {
         loreHistory.value.push(loreUrl.value)
       }
@@ -321,12 +356,14 @@ onMounted(() => {
   window.addEventListener('message', onLoreMessage)
   window.addEventListener('keydown', onKeyDown)
   document.addEventListener('click', onSkipClick)
+  // document.addEventListener('click', onLoreLinkClick)
 })
 
 onUnmounted(() => {
   window.removeEventListener('message', onLoreMessage)
   window.removeEventListener('keydown', onKeyDown)
   document.removeEventListener('click', onSkipClick)
+  // document.removeEventListener('click', onLoreLinkClick)
 })
 
 function goBackLore() {
@@ -350,5 +387,23 @@ function onKeyDown(event) {
     router.push(`${props.chapterBasePath}/${nextChapter.value.slug}`)
   }
 }
+
+// Intercept lore link clicks in chapter content
+// function onLoreLinkClick(event) {
+//   const link = event.target.closest('.lore-link')
+//   if (!link) return
+//   event.preventDefault()
+//   openLoreOverlay(link.href)
+//   console.log('Link pressed, opening Lore Overlay', link)
+// }
+
+function onArticleClick(event) {
+  const link = event.target.closest('.lore-link')
+  if (link) {
+    event.preventDefault()
+    openLoreOverlay(link.href)
+  }
+}
+
 
 </script>

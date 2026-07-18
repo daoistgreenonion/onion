@@ -97,12 +97,17 @@ const iframeSrc = computed(() => {
 
 // Handle lore navigation (from panels or internal links)
 function handleLoreClick(url) {
+  const path = url.startsWith('http') ? new URL(url).pathname : url
+  const hash = path.includes('#') ? '#' + path.split('#')[1] : ''
+  const cleanPath = hash ? path.split('#')[0] : path
+
   const basePath = `/embed-lore/${props.workType}/${props.workSlug}/`
-  const fullSlug = url.startsWith(basePath) ? url.slice(basePath.length) : url.split('/').pop()
+  const fullSlug = cleanPath.startsWith(basePath) ? cleanPath.slice(basePath.length) : cleanPath.split('/').pop()
+
   if (selectedLoreSlug.value) {
     loreHistory.value.push(selectedLoreSlug.value)
   }
-  selectedLoreSlug.value = fullSlug
+  selectedLoreSlug.value = fullSlug + (hash || '')
 }
 
 function goBack() {

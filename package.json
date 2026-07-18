@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/image": "^2.0.0",
     "gray-matter": "^4.0.3",
     "markdown-it": "^14.3.0",
     "nuxt": "^4.4.8",

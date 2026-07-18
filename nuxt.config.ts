@@ -33,7 +33,7 @@ export default defineNuxtConfig({
   // Remove the compatibilityDate line – it's not needed and causes type issues
   devtools: { enabled: true },
   debug: true,
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/image'],
   css: ['~/assets/css/tailwind.css'],
   tailwindcss: {
     config: {

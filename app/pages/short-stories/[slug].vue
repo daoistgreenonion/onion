@@ -3,6 +3,7 @@
     v-if="data"
     v-bind="data"
     :explicitSections="data.explicitSections"
+    :key="data.currentSlug"
 />
   <div v-else-if="error" class="max-w-3xl mx-auto py-12 px-4">
     <p class="text-red-500">Error loading story: {{ error }}</p>
